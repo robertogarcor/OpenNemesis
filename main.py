@@ -8,9 +8,12 @@ import os
 import sys
 import logging
 import asyncio
-from pathlib import Path
+import nest_asyncio
 from datetime import datetime
+from pathlib import Path
 from dotenv import load_dotenv
+
+nest_asyncio.apply()
 
 from telegram_bot import TelegramBot
 from gemini_client import GeminiClient
@@ -195,16 +198,23 @@ def main(mode: str = "validate"):
     logger.info("🚀 Iniciando OpenNemesis...")
     
     gemini_client = GeminiClient(
-        api_key=os.getenv("GEMINI_API_KEY"),
-        model=os.getenv("GEMINI_MODEL", "gemini-2.5-flash-native-audio-latest")
+        api_key=os.getenv("GEMINI_API_KEY", ""),
+        model=os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
     )
     
     telegram_bot = TelegramBot(
-        token=os.getenv("TELEGRAM_BOT_TOKEN"),
+        token=os.getenv("TELEGRAM_BOT_TOKEN", ""),
         gemini_client=gemini_client
     )
     
-    asyncio.run(telegram_bot.start())
+    loop = asyncio.get_event_loop()
+    try:
+        loop.run_until_complete(telegram_bot.start())
+    except KeyboardInterrupt:
+        logger.info("🛑 Bot detenido por el usuario")
+    finally:
+        if not loop.is_closed():
+            loop.close()
 
 
 if __name__ == "__main__":
