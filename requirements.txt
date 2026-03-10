@@ -10,6 +10,9 @@ python-telegram-bot>=20.0
 # Google Gemini AI
 google-genai>=0.3.0
 
+# Groq Whisper (transcripción)
+groq>=1.0.0
+
 # Web Search
 googlesearch-python>=1.1.0
 

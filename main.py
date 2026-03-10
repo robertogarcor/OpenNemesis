@@ -17,6 +17,7 @@ nest_asyncio.apply()
 
 from telegram_bot import TelegramBot
 from gemini_client import GeminiClient
+from groq_client import GroqWhisper
 
 logging.basicConfig(
     level=logging.INFO,
@@ -202,9 +203,15 @@ def main(mode: str = "validate"):
         model=os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
     )
     
+    groq_client = None
+    groq_api_key = os.getenv("GROQ_API_KEY")
+    if groq_api_key:
+        groq_client = GroqWhisper(api_key=groq_api_key)
+    
     telegram_bot = TelegramBot(
         token=os.getenv("TELEGRAM_BOT_TOKEN", ""),
-        gemini_client=gemini_client
+        gemini_client=gemini_client,
+        groq_client=groq_client
     )
     
     loop = asyncio.get_event_loop()

@@ -12,9 +12,10 @@ logger = logging.getLogger("OpenNemesis.Telegram")
 
 
 class TelegramBot:
-    def __init__(self, token: str, gemini_client, use_tts: bool = False):
+    def __init__(self, token: str, gemini_client, groq_client=None, use_tts: bool = False):
         self.token = token
         self.gemini_client = gemini_client
+        self.groq_client = groq_client
         self.use_tts = use_tts
         self.application = None
     
@@ -75,11 +76,19 @@ class TelegramBot:
         file = await context.bot.get_file(voice.file_id)
         audio_bytes = await file.download_as_bytearray()
         
-        transcription = self.gemini_client.transcribe_audio(audio_bytes)
+        transcription = None
         
-        if transcription == "⚠️ No pude procesar el audio.":
+        if self.groq_client:
+            logger.info("🔄 Intentando transcripción con Groq...")
+            transcription = self.groq_client.transcribe(audio_bytes)
+        
+        if not transcription:
+            logger.info("🔄 Fallback a Gemini para transcripción...")
+            transcription = self.gemini_client.transcribe_audio(audio_bytes)
+        
+        if not transcription or "⚠️" in transcription:
             await update.message.reply_text(
-                "🎤 No pude procesar el audio directamente. "
+                "🎤 No pude procesar el audio. "
                 "Por favor, escribe tu mensaje en texto."
             )
             return
