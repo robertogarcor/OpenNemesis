@@ -53,6 +53,9 @@ def load_environment():
     return True
 
 
+import asyncio
+
+
 def validate_telegram_connection():
     """Valida la conexión con Telegram Bot API"""
     logger.info("🔌 Validando conexión con Telegram...")
@@ -61,20 +64,23 @@ def validate_telegram_connection():
         import telegram
         from telegram import Bot
         
-        token = os.getenv("TELEGRAM_BOT_TOKEN")
-        if not token:
-            logger.error("✗ Token de Telegram no configurado")
-            return False
+        async def check_bot():
+            token = os.getenv("TELEGRAM_BOT_TOKEN")
+            if not token:
+                logger.error("✗ Token de Telegram no configurado")
+                return False
+            
+            bot = Bot(token=token)
+            bot_info = await bot.get_me()
+            
+            logger.info(f"✓ Conexión exitosa con Telegram")
+            logger.info(f"  Bot: @{bot_info.username}")
+            logger.info(f"  Nombre: {bot_info.name}")
+            logger.info(f"  ID: {bot_info.id}")
+            
+            return True
         
-        bot = Bot(token=token)
-        bot_info = bot.get_me()
-        
-        logger.info(f"✓ Conexión exitosa con Telegram")
-        logger.info(f"  Bot: @{bot_info.username}")
-        logger.info(f"  Nombre: {bot_info.name}")
-        logger.info(f"  ID: {bot_info.id}")
-        
-        return True
+        return asyncio.run(check_bot())
         
     except ImportError:
         logger.error("✗ python-telegram-bot no instalado")
