@@ -10,7 +10,7 @@ logger = logging.getLogger("OpenNemesis.Gemini")
 
 
 class GeminiClient:
-    def __init__(self, api_key: str, model: str = "gemini-2.5-flash-native-audio-latest"):
+    def __init__(self, api_key: str, model: str = "gemini-2.5-flash"):
         self.api_key = api_key
         self.model = model
         self.client = None
@@ -40,21 +40,27 @@ class GeminiClient:
             return "⚠️ Lo siento, hubo un error procesando tu mensaje."
     
     def transcribe_audio(self, audio_bytes: bytes) -> str:
-        """Transcribe audio usando Gemini"""
+        """Transcribe audio usando Gemini (vía file upload)"""
         try:
-            from google.genai import types
+            import io
             
-            audio_file = types.Media(
-                mime_type="audio/ogg",
-                data=audio_bytes
+            audio_buffer = io.BytesIO(audio_bytes)
+            audio_buffer.name = "audio.ogg"
+            
+            uploaded_file = self.client.files.upload(
+                file=audio_buffer,
+                config={"mime_type": "audio/ogg"}
             )
             
             response = self.client.models.generate_content(
                 model=self.model,
-                contents=[audio_file, "Transcribe este audio"]
+                contents=[uploaded_file, "Transcribe este audio en español. Devuelve solo la transcripción."]
             )
             
-            return response.text
+            if response.text:
+                return response.text
+            return "⚠️ No se pudo transcribir el audio."
+            
         except Exception as e:
             logger.error(f"Error transcribiendo audio: {e}")
             return "⚠️ No pude procesar el audio."

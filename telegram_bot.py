@@ -77,6 +77,13 @@ class TelegramBot:
         
         transcription = self.gemini_client.transcribe_audio(audio_bytes)
         
+        if transcription == "⚠️ No pude procesar el audio.":
+            await update.message.reply_text(
+                "🎤 No pude procesar el audio directamente. "
+                "Por favor, escribe tu mensaje en texto."
+            )
+            return
+        
         logger.info(f"Transcripción: {transcription[:100]}...")
         
         await update.message.reply_text(f"🎤 {transcription}")
