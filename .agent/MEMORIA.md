@@ -29,3 +29,27 @@ OpenNemesis es un agente de IA diseñado para ser sencillo, funcional, escalable
 - [ ] Implementar tools (clima, búsqueda web, hora)
 - [ ] Integrar skill GOG
 - [ ] Sistema de routing de skills
+
+## Roadmap Futuro
+
+### Opción LiveKit Intercalado (V2.0)
+Arquitectura para voz ilimitada en tiempo real:
+
+```
+Telegram (audio) → Servidor Python → LiveKit → Gemini Live API
+                                              ↓
+Telegram (audio) ← Servidor Python ← LiveKit ← Respuesta
+```
+
+**Características:**
+- Voz en tiempo real (no mensajes estáticos)
+- Conversación voz-a-voz fluida
+- Ilimitado (si tienes API de LiveKit + Gemini Live)
+- Múltiples usuarios simultáneos
+
+**Requisitos:**
+- Servidor corriendo 24/7
+- LiveKit desplegado (self-hosted o cloud)
+- Webhook de Telegram para voz
+
+**Estado:** Pendiente de implementación
