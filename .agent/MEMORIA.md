@@ -17,7 +17,7 @@ OpenNemesis es un agente de IA diseñado para ser sencillo, funcional, escalable
 - [x] Fix: usar async para get_me() en Telegram
 
 ### Hito 2: Puente de Comunicación (Telegram)
-- [ ] Configurar Application con handlers
-- [ ] Procesar mensajes de texto
-- [ ] Procesar mensajes de voz/audio
-- [ ] Responder en formato adecuado
+- [x] Configurar Application con handlers
+- [x] Procesar mensajes de texto
+- [x] Procesar mensajes de voz/audio
+- [ ] Testing y refinamiento

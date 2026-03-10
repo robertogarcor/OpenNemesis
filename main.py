@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
 """
 OpenNemesis - Agente de IA Modular
-V1.0 - Validación de Conexiones
+V1.0 - Validación de Conexiones y Bot Principal
 """
 
 import os
 import sys
 import logging
+import asyncio
 from pathlib import Path
 from datetime import datetime
 from dotenv import load_dotenv
 
-# Configuración de logging
+from telegram_bot import TelegramBot
+from gemini_client import GeminiClient
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s | %(levelname)-8s | %(message)s',
@@ -21,7 +24,6 @@ logger = logging.getLogger("OpenNemesis")
 
 
 def print_banner():
-    """Muestra el banner de inicio."""
     banner = """
 ╔═══════════════════════════════════════════════════════════╗
 ║                     OPENNEMESIS v1.0                       ║
@@ -155,29 +157,25 @@ def check_tools():
         logger.warning("⚠ No hay tools instaladas")
 
 
-def main():
-    """Función principal de validación"""
+def main(mode: str = "validate"):
+    """Función principal"""
     print_banner()
     
     logger.info("=" * 60)
-    logger.info("INICIANDO VALIDACIÓN DE CONEXIONES")
+    logger.info(f"MODO: {mode.upper()}")
     logger.info(f"Fecha: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     logger.info("=" * 60)
     
-    # Cargar entorno
     if not load_environment():
         logger.error("✗ Error en carga de entorno. Abortando.")
         sys.exit(1)
     
-    # Validar conexiones
     telegram_ok = validate_telegram_connection()
     gemini_ok = validate_gemini_connection()
     
-    # Verificar estructura
     check_skills()
     check_tools()
     
-    # Resumen
     logger.info("=" * 60)
     logger.info("RESUMEN DE VALIDACIÓN")
     logger.info("=" * 60)
@@ -185,13 +183,32 @@ def main():
     logger.info(f"Google Gemini:   {'✓ CONECTADO' if gemini_ok else '✗ FALLO'}")
     logger.info("=" * 60)
     
-    if telegram_ok and gemini_ok:
-        logger.info("🎉 Todas las conexiones validadas correctamente")
-        logger.info("OpenNemesis está listo para funcionar")
-    else:
+    if not (telegram_ok and gemini_ok):
         logger.error("⚠ Hay errores de conexión. Revisa la configuración.")
         sys.exit(1)
+    
+    if mode == "validate":
+        logger.info("🎉 Validación completada. Usa 'python main.py run' para iniciar el bot.")
+        return
+    
+    logger.info("🎉 Todas las conexiones validadas correctamente")
+    logger.info("🚀 Iniciando OpenNemesis...")
+    
+    gemini_client = GeminiClient(
+        api_key=os.getenv("GEMINI_API_KEY"),
+        model=os.getenv("GEMINI_MODEL", "gemini-2.5-flash-native-audio-latest")
+    )
+    
+    telegram_bot = TelegramBot(
+        token=os.getenv("TELEGRAM_BOT_TOKEN"),
+        gemini_client=gemini_client
+    )
+    
+    asyncio.run(telegram_bot.start())
 
 
 if __name__ == "__main__":
-    main()
+    mode = "validate"
+    if len(sys.argv) > 1 and sys.argv[1] == "run":
+        mode = "run"
+    main(mode)
