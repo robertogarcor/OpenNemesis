@@ -1,0 +1,25 @@
+# OpenNemesis Dependencies
+
+# Core
+python-dotenv>=0
+
+# Telegram Bot
+python-telegram-bot>=20.0
+
+# Google Gemini AI
+google-genai>=0.3.0
+
+# Web Search
+googlesearch-python>=1.1.0
+
+# Weather
+geopy>=2.4.0
+requests>=2.31.0
+
+# Date/Time (built-in, no need to install)
+
+# Audio processing (optional, for voice)
+pydub>=0.25.1
+
+# HTTP client
+httpx>=0.25.0
