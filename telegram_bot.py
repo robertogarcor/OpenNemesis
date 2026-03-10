@@ -87,7 +87,7 @@ class TelegramBot:
             await update.message.reply_text(response)
     
     async def send_voice_response(self, update: Update, text: str):
-        """Envía respuesta como voz usando TTS"""
+        """Envía respuesta como voz usando TTS + texto"""
         try:
             from tts_client import text_to_speech_sync
             
@@ -98,7 +98,8 @@ class TelegramBot:
             if audio_bytes:
                 audio_file = io.BytesIO(audio_bytes)
                 await update.message.reply_voice(audio_file)
-                logger.info("✓ Respuesta enviada como voz")
+                await update.message.reply_text(f"📝 {text}")
+                logger.info("✓ Respuesta enviada como voz + texto")
             else:
                 await update.message.reply_text(text)
                 
