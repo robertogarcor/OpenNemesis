@@ -14,8 +14,10 @@ OpenNemesis es un agente de IA diseñado para ser sencillo, funcional, escalable
 - [x] Crear requirements.txt con dependencias
 - [x] Crear README.md para el usuario
 - [x] Crear main.py con validación de conexiones (Telegram/Gemini)
+- [x] Fix: usar async para get_me() en Telegram
 
-### Hito 2: En progreso...
-- [ ] Puente de Comunicación (Telegram)
-- [ ] Integración de Skills
-- [ ] Documentación y Commits
+### Hito 2: Puente de Comunicación (Telegram)
+- [ ] Configurar Application con handlers
+- [ ] Procesar mensajes de texto
+- [ ] Procesar mensajes de voz/audio
+- [ ] Responder en formato adecuado
