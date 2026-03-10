@@ -79,6 +79,8 @@ class TelegramBot:
         
         logger.info(f"Transcripción: {transcription[:100]}...")
         
+        await update.message.reply_text(f"🎤 {transcription}")
+        
         response = self.gemini_client.chat(transcription)
         
         if self.use_tts and response:
