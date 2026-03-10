@@ -24,6 +24,8 @@ OpenNemesis es un agente de IA diseñado para ser sencillo, funcional, escalable
 - [x] Corrección de modelo Gemini
 
 ### Hito 3: Skills y Tools
+- [x] Implementar TTS con Edge TTS
+- [x] Sistema híbrido texto/voz
 - [ ] Implementar tools (clima, búsqueda web, hora)
 - [ ] Integrar skill GOG
 - [ ] Sistema de routing de skills
