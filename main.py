@@ -199,7 +199,7 @@ def main(mode: str = "validate"):
     
     gemini_client = GeminiClient(
         api_key=os.getenv("GEMINI_API_KEY", ""),
-        model=os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
+        model=os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
     )
     
     telegram_bot = TelegramBot(

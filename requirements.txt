@@ -17,10 +17,9 @@ googlesearch-python>=1.1.0
 geopy>=2.4.0
 requests>=2.31.0
 
-# Date/Time (built-in, no need to install)
-
-# Audio processing (optional, for voice)
+# Audio processing
 pydub>=0.25.1
+edge-tts>=7.0.0
 
 # HTTP client
 httpx>=0.25.0

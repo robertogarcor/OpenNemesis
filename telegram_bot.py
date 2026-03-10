@@ -1,10 +1,10 @@
 """
 OpenNemesis - Telegram Bot Handler
-Manejo de mensajes de texto y voz
+Manejo de mensajes de texto y voz con TTS opcional
 """
 
 import logging
-import asyncio
+import io
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
@@ -12,26 +12,38 @@ logger = logging.getLogger("OpenNemesis.Telegram")
 
 
 class TelegramBot:
-    def __init__(self, token: str, gemini_client):
+    def __init__(self, token: str, gemini_client, use_tts: bool = False):
         self.token = token
         self.gemini_client = gemini_client
+        self.use_tts = use_tts
         self.application = None
     
     async def start_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Maneja el comando /start"""
         await update.message.reply_text(
             "🎉 ¡Hola! Soy OpenNemesis\n\n"
-            "Estoy listo para ayudarte. Envíame un mensaje de texto o audio."
+            "Estoy listo para ayudarte. Envíame un mensaje de texto o audio.\n\n"
+            "Comandos:\n"
+            "/tts - Activar/desactivar respuestas de voz\n"
+            "/help - Mostrar ayuda"
         )
     
     async def help_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Maneja el comando /help"""
+        status = "activado" if self.use_tts else "desactivado"
         await update.message.reply_text(
-            "📖 Comandos disponibles:\n"
-            "/start - Iniciar el bot\n"
-            "/help - Mostrar ayuda\n\n"
-            "También puedes enviarme mensajes de voz o texto."
+            f"📖 Comandos disponibles:\n"
+            f"/start - Iniciar el bot\n"
+            f"/tts - Toggle TTS (actualmente {status})\n"
+            f"/help - Mostrar ayuda\n\n"
+            f"También puedes enviarme mensajes de voz o texto."
         )
+    
+    async def tts_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Toggle TTS"""
+        self.use_tts = not self.use_tts
+        status = "✓ Activado" if self.use_tts else "✗ Desactivado"
+        await update.message.reply_text(f"{status} respuestas de voz")
     
     async def handle_text(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Procesa mensajes de texto"""
@@ -45,7 +57,10 @@ class TelegramBot:
         
         response = self.gemini_client.chat(user_message)
         
-        await update.message.reply_text(response)
+        if self.use_tts and response:
+            await self.send_voice_response(update, response)
+        else:
+            await update.message.reply_text(response)
     
     async def handle_voice(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Procesa mensajes de voz/audio"""
@@ -66,7 +81,30 @@ class TelegramBot:
         
         response = self.gemini_client.chat(transcription)
         
-        await update.message.reply_text(response)
+        if self.use_tts and response:
+            await self.send_voice_response(update, response)
+        else:
+            await update.message.reply_text(response)
+    
+    async def send_voice_response(self, update: Update, text: str):
+        """Envía respuesta como voz usando TTS"""
+        try:
+            from tts_client import text_to_speech_sync
+            
+            await update.message.chat.send_action("record_voice")
+            
+            audio_bytes = text_to_speech_sync(text)
+            
+            if audio_bytes:
+                audio_file = io.BytesIO(audio_bytes)
+                await update.message.reply_voice(audio_file)
+                logger.info("✓ Respuesta enviada como voz")
+            else:
+                await update.message.reply_text(text)
+                
+        except Exception as e:
+            logger.error(f"Error en TTS: {e}")
+            await update.message.reply_text(text)
     
     async def handle_error(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Maneja errores"""
@@ -82,6 +120,7 @@ class TelegramBot:
         
         self.application.add_handler(CommandHandler("start", self.start_command))
         self.application.add_handler(CommandHandler("help", self.help_command))
+        self.application.add_handler(CommandHandler("tts", self.tts_command))
         
         self.application.add_handler(
             MessageHandler(filters.VOICE, self.handle_voice)
