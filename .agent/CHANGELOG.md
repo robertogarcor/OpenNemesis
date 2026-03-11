@@ -12,6 +12,10 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 - 📦 deps: cambiar duckduckgo-search por ddgs
 - 📦 deps: limpiar dependencias (eliminar livekit, langchain, email)
 - ✅ feat: function calling con Gemini working
+- ✨ feat: integrar GOG (Google Workspace) como tools
+  - gmail_search, gmail_list_emails, gmail_send
+  - calendar_list_events, calendar_create_event
+  - drive_list_files, contacts_list
 
 ## [2026-03-10]
 

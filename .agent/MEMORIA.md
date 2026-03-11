@@ -32,7 +32,7 @@ OpenNemesis es un agente de IA diseñado para ser sencillo, funcional, escalable
 - [x] Implementar tools (get_weather, get_time, search_web)
 - [x] Function calling con Gemini
 - [x] Soporte múltiples tools en una petición
-- [ ] Integrar skill GOG
+- [x] Integrar GOG (Google Workspace CLI) como tools
 - [ ] Sistema de routing de skills
 
 ## Roadmap Futuro
