@@ -39,6 +39,88 @@ TOOLS_SCHEMA = [{
                 },
                 "required": ["query"]
             }
+        },
+        # GOG Tools
+        {
+            "name": "gmail_search",
+            "description": "Search emails in Gmail",
+            "parameters": {
+                "type": "OBJECT",
+                "properties": {
+                    "query": {"type": "STRING", "description": "Gmail search query (e.g., 'from:someone@gmail.com newer_than:7d')"},
+                    "max_results": {"type": "INTEGER", "description": "Maximum number of results (default 5)"}
+                },
+                "required": ["query"]
+            }
+        },
+        {
+            "name": "gmail_list_emails",
+            "description": "List recent emails from inbox",
+            "parameters": {
+                "type": "OBJECT",
+                "properties": {
+                    "max_results": {"type": "INTEGER", "description": "Maximum number of emails to list (default 10)"}
+                }
+            }
+        },
+        {
+            "name": "gmail_send",
+            "description": "Send an email via Gmail",
+            "parameters": {
+                "type": "OBJECT",
+                "properties": {
+                    "to": {"type": "STRING", "description": "Recipient email address"},
+                    "subject": {"type": "STRING", "description": "Email subject"},
+                    "body": {"type": "STRING", "description": "Email body content"}
+                },
+                "required": ["to", "subject", "body"]
+            }
+        },
+        {
+            "name": "calendar_list_events",
+            "description": "List calendar events",
+            "parameters": {
+                "type": "OBJECT",
+                "properties": {
+                    "calendar_id": {"type": "STRING", "description": "Calendar ID (default: primary)"},
+                    "max_results": {"type": "INTEGER", "description": "Maximum number of events (default 10)"}
+                }
+            }
+        },
+        {
+            "name": "calendar_create_event",
+            "description": "Create a calendar event",
+            "parameters": {
+                "type": "OBJECT",
+                "properties": {
+                    "calendar_id": {"type": "STRING", "description": "Calendar ID (default: primary)"},
+                    "summary": {"type": "STRING", "description": "Event title"},
+                    "start_time": {"type": "STRING", "description": "Start time in ISO 8601 format (e.g., 2026-03-15T10:00:00)"},
+                    "end_time": {"type": "STRING", "description": "End time in ISO 8601 format (e.g., 2026-03-15T11:00:00)"}
+                },
+                "required": ["summary", "start_time", "end_time"]
+            }
+        },
+        {
+            "name": "drive_list_files",
+            "description": "List or search files in Google Drive",
+            "parameters": {
+                "type": "OBJECT",
+                "properties": {
+                    "query": {"type": "STRING", "description": "Search query for Drive files"},
+                    "max_results": {"type": "INTEGER", "description": "Maximum number of files (default 10)"}
+                }
+            }
+        },
+        {
+            "name": "contacts_list",
+            "description": "List Google Contacts",
+            "parameters": {
+                "type": "OBJECT",
+                "properties": {
+                    "max_results": {"type": "INTEGER", "description": "Maximum number of contacts (default 20)"}
+                }
+            }
         }
     ]
 }]
@@ -67,10 +149,24 @@ class GeminiClient:
         """Inicializa las tools disponibles"""
         try:
             from tools.tools import get_weather, get_time, search_web
+            from tools.gog_tools import (
+                gmail_search, gmail_list_emails, gmail_send,
+                calendar_list_events, calendar_create_event,
+                drive_list_files, contacts_list
+            )
             self.tools = {
+                # Basic tools
                 "get_weather": get_weather,
                 "get_time": get_time,
-                "search_web": search_web
+                "search_web": search_web,
+                # GOG tools
+                "gmail_search": gmail_search,
+                "gmail_list_emails": gmail_list_emails,
+                "gmail_send": gmail_send,
+                "calendar_list_events": calendar_list_events,
+                "calendar_create_event": calendar_create_event,
+                "drive_list_files": drive_list_files,
+                "contacts_list": contacts_list
             }
             logger.info(f"✓ Tools cargadas: {list(self.tools.keys())}")
         except Exception as e:
