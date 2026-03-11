@@ -7,6 +7,8 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 - 🗑️ remove: eliminar Groq (Whisper) - transcripción ahora vía Gemini (8869991)
 - ✨ feat: actualizar modelo Gemini a gemini-3.1-flash-lite-preview (500 RPM)
 - 🔧 fix: sincronizar modelo por defecto en main.py y gemini_client.py
+- ✨ feat: añadir tools (get_weather, get_time)
+- 📦 deps: limpiar dependencias (eliminar livekit, langchain, email)
 
 ## [2026-03-10]
 
