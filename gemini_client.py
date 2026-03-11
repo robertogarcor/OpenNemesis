@@ -49,6 +49,7 @@ class GeminiClient:
         self.api_key = api_key
         self.model = model
         self.client = None
+        self.last_function_call_part = None
         self._init_client()
         self._init_tools()
     
@@ -94,6 +95,10 @@ class GeminiClient:
             if response.function_calls:
                 logger.info(f"🔧 Function calls detectados: {[fc.name for fc in response.function_calls]}")
                 
+                self.last_function_call_part = None
+                if response.candidates and response.candidates[0].content.parts:
+                    self.last_function_call_part = response.candidates[0].content.parts[0]
+                
                 for fc in response.function_calls:
                     tool_name = fc.name
                     tool_args = dict(fc.args) if fc.args else {}
@@ -103,17 +108,24 @@ class GeminiClient:
                         result = self.tools[tool_name](**tool_args)
                         logger.info(f"🔧 Resultado: {str(result)[:100]}...")
                         
-                        follow_up = self.client.models.generate_content(
-                            model=self.model,
-                            contents=[
-                                {"function_response": {
-                                    "name": tool_name,
-                                    "response": {"result": result}
-                                }}
-                            ],
-                            config=config
-                        )
-                        return follow_up.text
+                        if self.last_function_call_part:
+                            follow_up = self.client.models.generate_content(
+                                model=self.model,
+                                contents=[
+                                    types.Content(role='user', parts=[types.Part(text=message)]),
+                                    types.Content(role='model', parts=[self.last_function_call_part]),
+                                    types.Content(role='function', parts=[types.Part(
+                                        function_response=types.FunctionResponse(
+                                            name=tool_name,
+                                            response={"result": result}
+                                        )
+                                    )])
+                                ],
+                                config=config
+                            )
+                            return follow_up.text
+                        else:
+                            return f"Resultado: {result}"
             
             return response.text
             
