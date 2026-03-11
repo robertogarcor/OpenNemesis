@@ -83,7 +83,8 @@ TOOLS_SCHEMA = [{
                 "type": "OBJECT",
                 "properties": {
                     "calendar_id": {"type": "STRING", "description": "Calendar ID (default: primary)"},
-                    "max_results": {"type": "INTEGER", "description": "Maximum number of events (default 10)"}
+                    "from_date": {"type": "STRING", "description": "Start date (RFC3339, date like '2026-03-15', or relative like 'today', 'tomorrow')"},
+                    "to_date": {"type": "STRING", "description": "End date (RFC3339, date like '2026-03-15', or relative like 'today', 'tomorrow')"}
                 }
             }
         },
@@ -95,8 +96,8 @@ TOOLS_SCHEMA = [{
                 "properties": {
                     "calendar_id": {"type": "STRING", "description": "Calendar ID (default: primary)"},
                     "summary": {"type": "STRING", "description": "Event title"},
-                    "start_time": {"type": "STRING", "description": "Start time in ISO 8601 format (e.g., 2026-03-15T10:00:00)"},
-                    "end_time": {"type": "STRING", "description": "End time in ISO 8601 format (e.g., 2026-03-15T11:00:00)"}
+                    "start_time": {"type": "STRING", "description": "Start time with timezone (e.g., 2026-03-15T10:00:00+01:00)"},
+                    "end_time": {"type": "STRING", "description": "End time with timezone (e.g., 2026-03-15T11:00:00+01:00)"}
                 },
                 "required": ["summary", "start_time", "end_time"]
             }

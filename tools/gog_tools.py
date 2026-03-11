@@ -59,30 +59,58 @@ def gmail_send(to: str, subject: str, body: str) -> str:
     ])
 
 
-def calendar_list_events(calendar_id: str = "primary", max_results: int = 10) -> str:
-    """Lista eventos del calendario."""
-    return run_gog_command([
-        "calendar", "events", calendar_id,
-        "--max", str(max_results)
-    ])
+def calendar_list_events(calendar_id: str = "primary", max_results: int = 10, from_date: str = "", to_date: str = "") -> str:
+    """Lista eventos del calendario.
+    
+    Args:
+        calendar_id: ID del calendario (default: primary)
+        max_results: Número máximo de resultados
+        from_date: Fecha inicio (RFC3339, fecha, o relative: today, tomorrow)
+        to_date: Fecha fin (RFC3339, fecha, o relative: today, tomorrow)
+    """
+    args = ["calendar", "events", calendar_id]
+    
+    if from_date:
+        args.extend(["--from", from_date])
+    if to_date:
+        args.extend(["--to", to_date])
+    if not from_date and not to_date:
+        args.append("--today")
+    
+    args.extend(["--results-only"])
+    
+    return run_gog_command(args)
 
 
 def calendar_create_event(
-    calendar_id: str,
-    summary: str,
-    start_time: str,
-    end_time: str
+    calendar_id: str = "primary",
+    summary: str = "",
+    start_time: str = "",
+    end_time: str = ""
 ) -> str:
     """Crea un evento en el calendario.
     
-    Formato de tiempo: ISO 8601 (YYYY-MM-DDTHH:MM:SS)
-    Ejemplo: 2026-03-15T10:00:00
+    Args:
+        calendar_id: ID del calendario (default: primary)
+        summary: Título del evento
+        start_time: Hora inicio (RFC3339: 2026-03-15T10:00:00+01:00)
+        end_time: Hora fin (RFC3339: 2026-03-15T11:00:00+01:00)
     """
+    if not summary or not start_time or not end_time:
+        return "Error: Faltan parámetros. Se requiere summary, start_time y end_time"
+    
+    # Añadir zona horaria si no la tiene
+    if "+" not in start_time and "Z" not in start_time:
+        start_time = start_time + "+01:00"
+    if "+" not in end_time and "Z" not in end_time:
+        end_time = end_time + "+01:00"
+    
     return run_gog_command([
         "calendar", "create", calendar_id,
         "--summary", summary,
         "--from", start_time,
-        "--to", end_time
+        "--to", end_time,
+        "--force"
     ])
 
 
