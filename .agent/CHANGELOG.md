@@ -5,17 +5,16 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 ## [2026-03-11]
 
 - 🗑️ remove: eliminar Groq (Whisper) - transcripción ahora vía Gemini (8869991)
-- ✨ feat: actualizar modelo Gemini a gemini-3.1-flash-lite-preview (500 RPM)
-- 🔧 fix: sincronizar modelo por defecto en main.py y gemini_client.py
 - ✨ feat: añadir tools (get_weather, get_time, search_web)
 - 🔧 fix: soportar múltiples function calls en una misma petición
 - 📦 deps: cambiar duckduckgo-search por ddgs
-- 📦 deps: limpiar dependencias (eliminar livekit, langchain, email)
-- ✅ feat: function calling con Gemini working
 - ✨ feat: integrar GOG (Google Workspace) como tools
   - gmail_search, gmail_list_emails, gmail_send
   - calendar_list_events, calendar_create_event
   - drive_list_files, contacts_list
+- 🔧 fix: calendar tools - add timezone support
+- 🔧 fix: handle None response from function calls
+- 🔄 Cambiar modelo a gemini-3.1-flash-lite-preview (500 RPM)
 
 ## [2026-03-10]
 
