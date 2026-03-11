@@ -22,6 +22,9 @@ OpenNemesis es un agente de IA diseñado para ser sencillo, funcional, escalable
 - [x] Procesar mensajes de voz/audio
 - [x] Testing y refinamiento
 - [x] Corrección de modelo Gemini
+- [x] Transcripción de audio vía Gemini (file upload)
+- [x] Eliminar Groq - usar solo Gemini para transcripción
+- [x] Actualizar a modelo gemini-3.1-flash-lite-preview (500 RPM)
 
 ### Hito 3: Skills y Tools
 - [x] Implementar TTS con Edge TTS

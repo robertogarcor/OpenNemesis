@@ -6,7 +6,8 @@ Agente de IA modular, escalable y seguro inspirado en OpenClaw.
 
 - **Comunicación**: Telegram Bot (texto y voz)
 - **IA**: Google Gemini (gemini-3.1-flash-lite-preview - 500 RPM)
-- **Skills**: GOG (Google Workspace), búsqueda web, clima, hora/día
+- **Skills**: GOG (Google Workspace CLI)
+- **Tools**: Pendientes de implementar (búsqueda web, clima, hora)
 - **Arquitectura**: Modular y escalable
 
 ## Requisitos
