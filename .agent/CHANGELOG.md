@@ -4,7 +4,7 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 ## [2026-03-11]
 
-- 🗑️ remove: eliminar Groq (Whisper) - transcripción ahora vía Gemini (8869991)
+- 🗑️ remove: eliminar Groq (Whisper) - transcripción vía Gemini (8869991)
 - ✨ feat: añadir tools (get_weather, get_time, search_web)
 - 🔧 fix: soportar múltiples function calls en una misma petición
 - 📦 deps: cambiar duckduckgo-search por ddgs
@@ -14,7 +14,7 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
   - drive_list_files, contacts_list
 - 🔧 fix: calendar tools - add timezone support
 - 🔧 fix: handle None response from function calls
-- 🔄 Cambiar modelo a gemini-3.1-flash-lite-preview (500 RPM)
+- 🔄 Cambiar modelo a gemini-3.1-flash-lite-preview (500 RPM) (9b737da)
 
 ## [2026-03-10]
 
