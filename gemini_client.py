@@ -240,7 +240,13 @@ class GeminiClient:
                     config=config
                 )
                 
-                return follow_up.text
+                # Manejar caso donde text es None
+                if follow_up.text:
+                    return follow_up.text
+                elif function_responses:
+                    # Devolver el resultado de la última función si no hay texto
+                    return function_responses[-1]["result"]
+                return "⚠️ No se pudo obtener una respuesta."
             
             return response.text
             
