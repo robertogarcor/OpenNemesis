@@ -17,7 +17,6 @@ nest_asyncio.apply()
 
 from telegram_bot import TelegramBot
 from gemini_client import GeminiClient
-from groq_client import GroqWhisper
 
 logging.basicConfig(
     level=logging.INFO,
@@ -104,7 +103,7 @@ def validate_gemini_connection():
         import google.genai as genai
         
         api_key = os.getenv("GEMINI_API_KEY")
-        model = os.getenv("GEMINI_MODEL", "gemini-2.5-flash-native-audio-latest")
+        model = os.getenv("GEMINI_MODEL", "gemini-3.1-flash-lite-preview")
         
         if not api_key:
             logger.error("✗ API Key de Gemini no configurada")
@@ -200,18 +199,12 @@ def main(mode: str = "validate"):
     
     gemini_client = GeminiClient(
         api_key=os.getenv("GEMINI_API_KEY", ""),
-        model=os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+        model=os.getenv("GEMINI_MODEL", "gemini-3.1-flash-lite-preview")
     )
-    
-    groq_client = None
-    groq_api_key = os.getenv("GROQ_API_KEY")
-    if groq_api_key:
-        groq_client = GroqWhisper(api_key=groq_api_key)
     
     telegram_bot = TelegramBot(
         token=os.getenv("TELEGRAM_BOT_TOKEN", ""),
-        gemini_client=gemini_client,
-        groq_client=groq_client
+        gemini_client=gemini_client
     )
     
     loop = asyncio.get_event_loop()

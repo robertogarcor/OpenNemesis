@@ -10,7 +10,7 @@ logger = logging.getLogger("OpenNemesis.Gemini")
 
 
 class GeminiClient:
-    def __init__(self, api_key: str, model: str = "gemini-2.5-flash"):
+    def __init__(self, api_key: str, model: str = "gemini-3.1-flash-lite-preview"):
         self.api_key = api_key
         self.model = model
         self.client = None
