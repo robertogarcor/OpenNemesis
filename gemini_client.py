@@ -95,37 +95,55 @@ class GeminiClient:
             if response.function_calls:
                 logger.info(f"🔧 Function calls detectados: {[fc.name for fc in response.function_calls]}")
                 
-                self.last_function_call_part = None
+                # Obtener la part con thought_signature
+                last_function_call_part = None
                 if response.candidates and response.candidates[0].content.parts:
-                    self.last_function_call_part = response.candidates[0].content.parts[0]
+                    last_function_call_part = response.candidates[0].content.parts[0]
                 
+                # Ejecutar TODOS los function calls
+                function_responses = []
                 for fc in response.function_calls:
                     tool_name = fc.name
                     tool_args = dict(fc.args) if fc.args else {}
                     
                     if tool_name in self.tools:
                         logger.info(f"🔧 Ejecutando {tool_name} con args: {tool_args}")
-                        result = self.tools[tool_name](**tool_args)
-                        logger.info(f"🔧 Resultado: {str(result)[:100]}...")
+                        try:
+                            result = self.tools[tool_name](**tool_args)
+                            logger.info(f"🔧 Resultado: {str(result)[:100]}...")
+                        except Exception as e:
+                            logger.error(f"🔧 Error ejecutando {tool_name}: {e}")
+                            result = f"Error: {str(e)}"
                         
-                        if self.last_function_call_part:
-                            follow_up = self.client.models.generate_content(
-                                model=self.model,
-                                contents=[
-                                    types.Content(role='user', parts=[types.Part(text=message)]),
-                                    types.Content(role='model', parts=[self.last_function_call_part]),
-                                    types.Content(role='function', parts=[types.Part(
-                                        function_response=types.FunctionResponse(
-                                            name=tool_name,
-                                            response={"result": result}
-                                        )
-                                    )])
-                                ],
-                                config=config
+                        function_responses.append({
+                            "name": tool_name,
+                            "result": result
+                        })
+                
+                # Construir contents con TODAS las respuestas
+                contents_parts = [
+                    types.Content(role='user', parts=[types.Part(text=message)]),
+                    types.Content(role='model', parts=[last_function_call_part])
+                ]
+                
+                for fr in function_responses:
+                    contents_parts.append(
+                        types.Content(role='function', parts=[types.Part(
+                            function_response=types.FunctionResponse(
+                                name=fr["name"],
+                                response={"result": fr["result"]}
                             )
-                            return follow_up.text
-                        else:
-                            return f"Resultado: {result}"
+                        )])
+                    )
+                
+                # Enviar follow-up con todas las respuestas
+                follow_up = self.client.models.generate_content(
+                    model=self.model,
+                    contents=contents_parts,
+                    config=config
+                )
+                
+                return follow_up.text
             
             return response.text
             

@@ -26,3 +26,18 @@ def get_time() -> str:
     except Exception as e:
         logging.error(f"Error retrieving time: {e}")
         return f"An error occurred while retrieving time."
+
+
+def search_web(query: str) -> str:
+    """Search the web using DuckDuckGo."""
+    try:
+        from ddgs import DDGS
+        results = DDGS().text(query, max_results=5)
+        if results:
+            formatted = "\n".join([f"{r.get('title', '')}: {r.get('href', '')}" for r in results])
+            logging.info(f"Search results for '{query}': {formatted}")
+            return formatted
+        return f"No results found for '{query}'."
+    except Exception as e:
+        logging.error(f"Error searching the web for '{query}': {e}")
+        return f"An error occurred while searching the web."    

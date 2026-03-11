@@ -10,6 +10,9 @@ python-telegram-bot>=20.0
 # Google Gemini AI
 google-genai>=0.3.0
 
+# Web Search
+ddgs>=3.0.0
+
 # Weather
 geopy>=2.4.0
 requests>=2.31.0
