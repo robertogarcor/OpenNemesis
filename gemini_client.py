@@ -1,6 +1,6 @@
 """
 OpenNemesis - Gemini Client
-Cliente para Google Gemini con soporte multimodal
+Cliente para Google Gemini con soporte multimodal y tools
 """
 
 import logging
@@ -8,14 +8,49 @@ from typing import Union
 
 logger = logging.getLogger("OpenNemesis.Gemini")
 
+TOOLS_SCHEMA = [{
+    "function_declarations": [
+        {
+            "name": "get_weather",
+            "description": "Get the current weather for a given city",
+            "parameters": {
+                "type": "OBJECT",
+                "properties": {
+                    "city": {"type": "STRING", "description": "City name"}
+                },
+                "required": ["city"]
+            }
+        },
+        {
+            "name": "get_time",
+            "description": "Get current time and date",
+            "parameters": {
+                "type": "OBJECT",
+                "properties": {}
+            }
+        },
+        {
+            "name": "search_web",
+            "description": "Search the web for information",
+            "parameters": {
+                "type": "OBJECT",
+                "properties": {
+                    "query": {"type": "STRING", "description": "Search query"}
+                },
+                "required": ["query"]
+            }
+        }
+    ]
+}]
+
 
 class GeminiClient:
     def __init__(self, api_key: str, model: str = "gemini-3.1-flash-lite-preview"):
         self.api_key = api_key
         self.model = model
         self.client = None
-        self.chat_session = None
         self._init_client()
+        self._init_tools()
     
     def _init_client(self):
         """Inicializa el cliente de Gemini"""
@@ -27,8 +62,67 @@ class GeminiClient:
             logger.error(f"✗ Error inicializando Gemini: {e}")
             raise
     
+    def _init_tools(self):
+        """Inicializa las tools disponibles"""
+        try:
+            from tools.tools import get_weather, get_time, search_web
+            self.tools = {
+                "get_weather": get_weather,
+                "get_time": get_time,
+                "search_web": search_web
+            }
+            logger.info(f"✓ Tools cargadas: {list(self.tools.keys())}")
+        except Exception as e:
+            logger.error(f"✗ Error cargando tools: {e}")
+            self.tools = {}
+    
     def chat(self, message: str) -> str:
-        """Envía un mensaje y obtiene respuesta"""
+        """Envía un mensaje y obtiene respuesta (con tools)"""
+        try:
+            from google.genai import types
+            
+            config = types.GenerateContentConfig(
+                tools=TOOLS_SCHEMA
+            )
+            
+            response = self.client.models.generate_content(
+                model=self.model,
+                contents=message,
+                config=config
+            )
+            
+            if response.function_calls:
+                logger.info(f"🔧 Function calls detectados: {[fc.name for fc in response.function_calls]}")
+                
+                for fc in response.function_calls:
+                    tool_name = fc.name
+                    tool_args = dict(fc.args) if fc.args else {}
+                    
+                    if tool_name in self.tools:
+                        logger.info(f"🔧 Ejecutando {tool_name} con args: {tool_args}")
+                        result = self.tools[tool_name](**tool_args)
+                        logger.info(f"🔧 Resultado: {str(result)[:100]}...")
+                        
+                        follow_up = self.client.models.generate_content(
+                            model=self.model,
+                            contents=[
+                                {"function_response": {
+                                    "name": tool_name,
+                                    "response": {"result": result}
+                                }}
+                            ],
+                            config=config
+                        )
+                        return follow_up.text
+            
+            return response.text
+            
+        except Exception as e:
+            logger.error(f"Error en chat: {e}")
+            return "⚠️ Lo siento, hubo un error procesando tu mensaje."
+    
+    def chat_simple(self, message: str) -> str:
+        """Envía un mensaje sin tools"""
         try:
             response = self.client.models.generate_content(
                 model=self.model,
