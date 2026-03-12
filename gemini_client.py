@@ -134,21 +134,40 @@ class GeminiClient:
                 system_instruction=system_instruction
             )
             
-            response = self.client.models.generate_content(
-                model=self.model,
-                contents=message,
-                config=config
-            )
+            contents = [types.Content(role='user', parts=[types.Part(text=message)])]
             
-            if response.function_calls:
+            max_iterations = 10
+            iteration = 0
+            
+            while iteration < max_iterations:
+                iteration += 1
+                
+                response = self.client.models.generate_content(
+                    model=self.model,
+                    contents=contents,
+                    config=config
+                )
+                
+                if not response.function_calls:
+                    if response.text:
+                        return response.text
+                    elif contents:
+                        for c in contents:
+                            if c.role == 'function':
+                                for p in c.parts:
+                                    if p.function_response:
+                                        return p.function_response.response.get('result', '⚠️ Sin respuesta')
+                    return "⚠️ No se pudo obtener una respuesta."
+                
                 logger.info(f"🔧 Function calls detectados: {[fc.name for fc in response.function_calls]}")
                 
-                # Obtener la part con thought_signature
                 last_function_call_part = None
                 if response.candidates and response.candidates[0].content.parts:
-                    last_function_call_part = response.candidates[0].content.parts[0]
+                    for part in response.candidates[0].content.parts:
+                        if part.function_call:
+                            last_function_call_part = part
+                            break
                 
-                # Ejecutar TODOS los function calls
                 function_responses = []
                 for fc in response.function_calls:
                     tool_name = fc.name
@@ -158,7 +177,7 @@ class GeminiClient:
                         logger.info(f"🔧 Ejecutando {tool_name} con args: {tool_args}")
                         try:
                             result = self.tools[tool_name](**tool_args)
-                            logger.info(f"🔧 Resultado: {str(result)[:100]}...")
+                            logger.info(f"🔧 Resultado: {str(result)[:200]}...")
                         except Exception as e:
                             logger.error(f"🔧 Error ejecutando {tool_name}: {e}")
                             result = f"Error: {str(e)}"
@@ -168,14 +187,13 @@ class GeminiClient:
                             "result": result
                         })
                 
-                # Construir contents con TODAS las respuestas
-                contents_parts = [
-                    types.Content(role='user', parts=[types.Part(text=message)]),
-                    types.Content(role='model', parts=[last_function_call_part])
-                ]
+                contents.append(
+                    types.Content(role='model', parts=[last_function_call_part]) if last_function_call_part 
+                    else types.Content(role='model', parts=[types.Part(text="")])
+                )
                 
                 for fr in function_responses:
-                    contents_parts.append(
+                    contents.append(
                         types.Content(role='function', parts=[types.Part(
                             function_response=types.FunctionResponse(
                                 name=fr["name"],
@@ -183,23 +201,8 @@ class GeminiClient:
                             )
                         )])
                     )
-                
-                # Enviar follow-up con todas las respuestas
-                follow_up = self.client.models.generate_content(
-                    model=self.model,
-                    contents=contents_parts,
-                    config=config
-                )
-                
-                # Manejar caso donde text es None
-                if follow_up.text:
-                    return follow_up.text
-                elif function_responses:
-                    # Devolver el resultado de la última función si no hay texto
-                    return function_responses[-1]["result"]
-                return "⚠️ No se pudo obtener una respuesta."
             
-            return response.text
+            return "⚠️ Demasiadas iteraciones."
             
         except Exception as e:
             logger.error(f"Error en chat: {e}")
