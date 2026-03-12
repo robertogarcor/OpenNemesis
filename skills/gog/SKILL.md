@@ -150,7 +150,35 @@ gog calendar events primary --from 2026-03-12 --to 2026-03-19
 
 **IMPORTANTE**: El año actual es 2026. NO uses 2025 ni otros años.
 
-### Búsqueda de correos enviados
+### Búsqueda de correos ENVIADOS (IMPORTANT)
 
-- Para buscar correos ENVIADOS (que tú enviaste): `gog gmail search "from:tu@email.com newer_than:1d"`
-- Para buscar correos RECIBIDOS: `gog gmail search "newer_than:1d"`
+Para buscar correos que TÚ enviaste:
+
+**USA "from:me" o "from:tu@email.com" - esto busca correos DESDE tu cuenta**
+
+```bash
+# Buscar correos enviados ayer
+gog gmail search "from:me newer_than:1d"
+
+# Buscar correos enviados la semana pasada
+gog gmail search "from:me newer_than:7d"
+
+# Buscar correos enviados a un destinatario específico
+gog gmail search "from:me to:destinatario@ejemplo.com"
+```
+
+**ERROR COMÚN**: No confundas la búsqueda:
+- `from:fontflorida1093@gmail.com` = busca correos DESDE esa persona (no los que tú enviaste)
+- `from:me` = busca correos que TÚ enviaste
+
+### Búsqueda de correos RECIBIDOS
+
+Para buscar correos que RECIBISTE:
+
+```bash
+# Buscar correos no leídos recientes
+gog gmail search "is:unread newer_than:1d"
+
+# Buscar correos de un remitente específico
+gog gmail search "from:remitente@ejemplo.com"
+```

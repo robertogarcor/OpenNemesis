@@ -72,6 +72,22 @@ Ejemplo:
 No uses formato UTC con "Z".
 
 ------------------------------------------------
+GMAIL - BÚSQUEDA DE ENVIADOS (IMPORTANT)
+------------------------------------------------
+
+Para buscar correos que TÚ enviaste:
+
+USA "from:me" - esto busca correos DESDE tu cuenta
+
+Ejemplos:
+- "corrios que envié ayer" → gog gmail search "from:me newer_than:1d"
+- "correos enviados a persona" → gog gmail search "from:me to:email@ejemplo.com"
+
+ERROR COMÚN:
+- "from:tu@email.com" busca correos DESDE esa persona (no los que tú enviaste)
+- "from:me" busca correos que TÚ enviaste
+
+------------------------------------------------
 REGLA GENERAL - TAREAS SERIAS
 ------------------------------------------------
 
