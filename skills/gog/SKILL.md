@@ -114,3 +114,43 @@ Notes
 - Docs supports export/cat/copy. In-place edits require a Docs API client (not in gog).
 - Confirm before sending mail or creating events.
 - `gog gmail search` returns one row per thread; use `gog gmail messages search` when you need every individual email returned separately.
+
+## Fechas y Horas (IMPORTANT)
+
+### IMPORTANTE: Antes de crear eventos, usa get_time()
+
+SIEMPRE usa la función get_time() para obtener la fecha y hora actual antes de crear o consultar eventos de calendario.
+
+### Formato de fechas para calendario
+
+- **Timezone**: Europe/Madrid (UTC+1 en invierno, UTC+2 en verano)
+- **Formato ISO con timezone**: `YYYY-MM-DDTHH:MM:SS+HH:MM`
+- **Para hoy a las 13:00h (Madrid)**: `2026-03-12T13:00:00+01:00`
+- **Para hoy a las 15:00h (Madrid)**: `2026-03-12T15:00:00+01:00`
+
+### NO uses UTC (Z)
+
+- **INCORRECTO**: `2026-03-12T13:00:00Z` (esto es UTC)
+- **CORRECTO**: `2026-03-12T13:00:00+01:00` (esto es Madrid)
+
+### Ejemplos prácticos
+
+```bash
+# Crear evento para hoy 12 de marzo, 13:00-15:00h (Madrid)
+gog calendar create primary --summary "Desarrollo OpenNemesis" --from 2026-03-12T13:00:00+01:00 --to 2026-03-12T15:00:00+01:00
+
+# Ver eventos de hoy
+gog calendar events primary --from 2026-03-12 --to 2026-03-13
+
+# Ver eventos de esta semana
+gog calendar events primary --from 2026-03-12 --to 2026-03-19
+```
+
+### Año actual
+
+**IMPORTANTE**: El año actual es 2026. NO uses 2025 ni otros años.
+
+### Búsqueda de correos enviados
+
+- Para buscar correos ENVIADOS (que tú enviaste): `gog gmail search "from:tu@email.com newer_than:1d"`
+- Para buscar correos RECIBIDOS: `gog gmail search "newer_than:1d"`

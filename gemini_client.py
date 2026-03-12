@@ -1,6 +1,6 @@
 """
 OpenNemesis - Gemini Client
-Cliente para Google Gemini con soporte multimodal y tools
+Cliente para Google Gemini con soporte multimodal, tools y skills
 """
 
 import logging
@@ -8,8 +8,23 @@ from typing import Union
 
 logger = logging.getLogger("OpenNemesis.Gemini")
 
+from prompt import get_system_prompt, reload_skills_context
+
+SKILLS_CONTEXT = reload_skills_context()
+
 TOOLS_SCHEMA = [{
     "function_declarations": [
+        {
+            "name": "execute_command",
+            "description": "Execute a shell command. Use this for any system command, git operations, gog CLI commands, or any other terminal operation. ALWAYS use the full command with all arguments.",
+            "parameters": {
+                "type": "OBJECT",
+                "properties": {
+                    "command": {"type": "STRING", "description": "The complete command to execute"}
+                },
+                "required": ["command"]
+            }
+        },
         {
             "name": "get_weather",
             "description": "Get the current weather for a given city",
@@ -39,89 +54,6 @@ TOOLS_SCHEMA = [{
                 },
                 "required": ["query"]
             }
-        },
-        # GOG Tools
-        {
-            "name": "gmail_search",
-            "description": "Search emails in Gmail",
-            "parameters": {
-                "type": "OBJECT",
-                "properties": {
-                    "query": {"type": "STRING", "description": "Gmail search query (e.g., 'from:someone@gmail.com newer_than:7d')"},
-                    "max_results": {"type": "INTEGER", "description": "Maximum number of results (default 5)"}
-                },
-                "required": ["query"]
-            }
-        },
-        {
-            "name": "gmail_list_emails",
-            "description": "List recent emails from inbox",
-            "parameters": {
-                "type": "OBJECT",
-                "properties": {
-                    "max_results": {"type": "INTEGER", "description": "Maximum number of emails to list (default 10)"}
-                }
-            }
-        },
-        {
-            "name": "gmail_send",
-            "description": "Send an email via Gmail",
-            "parameters": {
-                "type": "OBJECT",
-                "properties": {
-                    "to": {"type": "STRING", "description": "Recipient email address"},
-                    "subject": {"type": "STRING", "description": "Email subject"},
-                    "body": {"type": "STRING", "description": "Email body content"}
-                },
-                "required": ["to", "subject", "body"]
-            }
-        },
-        {
-            "name": "calendar_list_events",
-            "description": "List calendar events",
-            "parameters": {
-                "type": "OBJECT",
-                "properties": {
-                    "calendar_id": {"type": "STRING", "description": "Calendar ID (default: primary)"},
-                    "from_date": {"type": "STRING", "description": "Start date (RFC3339, date like '2026-03-15', or relative like 'today', 'tomorrow')"},
-                    "to_date": {"type": "STRING", "description": "End date (RFC3339, date like '2026-03-15', or relative like 'today', 'tomorrow')"}
-                }
-            }
-        },
-        {
-            "name": "calendar_create_event",
-            "description": "Create a calendar event",
-            "parameters": {
-                "type": "OBJECT",
-                "properties": {
-                    "calendar_id": {"type": "STRING", "description": "Calendar ID (default: primary)"},
-                    "summary": {"type": "STRING", "description": "Event title"},
-                    "start_time": {"type": "STRING", "description": "Start time with timezone (e.g., 2026-03-15T10:00:00+01:00)"},
-                    "end_time": {"type": "STRING", "description": "End time with timezone (e.g., 2026-03-15T11:00:00+01:00)"}
-                },
-                "required": ["summary", "start_time", "end_time"]
-            }
-        },
-        {
-            "name": "drive_list_files",
-            "description": "List or search files in Google Drive",
-            "parameters": {
-                "type": "OBJECT",
-                "properties": {
-                    "query": {"type": "STRING", "description": "Search query for Drive files"},
-                    "max_results": {"type": "INTEGER", "description": "Maximum number of files (default 10)"}
-                }
-            }
-        },
-        {
-            "name": "contacts_list",
-            "description": "List Google Contacts",
-            "parameters": {
-                "type": "OBJECT",
-                "properties": {
-                    "max_results": {"type": "INTEGER", "description": "Maximum number of contacts (default 20)"}
-                }
-            }
         }
     ]
 }]
@@ -150,24 +82,38 @@ class GeminiClient:
         """Inicializa las tools disponibles"""
         try:
             from tools.tools import get_weather, get_time, search_web
-            from tools.gog_tools import (
-                gmail_search, gmail_list_emails, gmail_send,
-                calendar_list_events, calendar_create_event,
-                drive_list_files, contacts_list
-            )
+            import subprocess
+            import os
+            
+            def execute_command(command: str) -> str:
+                """Execute a shell command"""
+                try:
+                    env = os.environ.copy()
+                    env["GOG_ACCOUNT"] = os.getenv("GOG_ACCOUNT", "")
+                    if "/opt/gogcli" not in env.get("PATH", ""):
+                        env["PATH"] = "/opt/gogcli:" + env.get("PATH", "")
+                    
+                    result = subprocess.run(
+                        command,
+                        shell=True,
+                        capture_output=True,
+                        text=True,
+                        timeout=60,
+                        env=env
+                    )
+                    if result.returncode != 0:
+                        return f"Error: {result.stderr}"
+                    return result.stdout if result.stdout else "Comando ejecutado correctamente."
+                except subprocess.TimeoutExpired:
+                    return "Error: Timeout ejecutando comando"
+                except Exception as e:
+                    return f"Error: {str(e)}"
+            
             self.tools = {
-                # Basic tools
+                "execute_command": execute_command,
                 "get_weather": get_weather,
                 "get_time": get_time,
                 "search_web": search_web,
-                # GOG tools
-                "gmail_search": gmail_search,
-                "gmail_list_emails": gmail_list_emails,
-                "gmail_send": gmail_send,
-                "calendar_list_events": calendar_list_events,
-                "calendar_create_event": calendar_create_event,
-                "drive_list_files": drive_list_files,
-                "contacts_list": contacts_list
             }
             logger.info(f"✓ Tools cargadas: {list(self.tools.keys())}")
         except Exception as e:
@@ -175,12 +121,17 @@ class GeminiClient:
             self.tools = {}
     
     def chat(self, message: str) -> str:
-        """Envía un mensaje y obtiene respuesta (con tools)"""
+        """Envía un mensaje y obtiene respuesta (con function calling)"""
         try:
             from google.genai import types
             
+            system_instruction = get_system_prompt()
+            if SKILLS_CONTEXT:
+                system_instruction += "\n\n" + SKILLS_CONTEXT
+            
             config = types.GenerateContentConfig(
-                tools=TOOLS_SCHEMA
+                tools=TOOLS_SCHEMA,
+                system_instruction=system_instruction
             )
             
             response = self.client.models.generate_content(

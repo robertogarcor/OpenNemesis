@@ -8,8 +8,9 @@ Agente de IA modular, escalable y seguro inspirado en OpenClaw.
 - **IA**: Google Gemini (gemini-3.1-flash-lite-preview - 500 RPM) con function calling
 - **Tools**:
   - Básicas: get_weather, get_time, search_web
-  - GOG (Google Workspace): gmail_search, gmail_send, calendar_events, calendar_create, drive_search, contacts
-- **Skills**: GOG (Google Workspace CLI)
+  - Genérica: execute_command (ejecuta cualquier comando)
+- **Skills**: Contexto automático desde ./skills/*/SKILL.md
+  - gog: Google Workspace (Gmail, Calendar, Drive, Contacts)
 - **Arquitectura**: Modular y escalable
 
 ## Requisitos

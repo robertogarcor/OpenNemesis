@@ -2,6 +2,25 @@
 
 Todos los cambios notables de este proyecto serán documentados en este archivo.
 
+## [2026-03-12]
+
+- ✨ feat: sistema de skills con contexto SKILL.md
+  - skills/loader.py carga automáticamente ./skills/*/SKILL.md
+  - Contexto de skills incluido en system prompt de Gemini
+  - Tool genérica execute_command para ejecutar comandos directamente
+  - Nueva skill = solo añadir carpeta con SKILL.md
+- 🔄 refactor: eliminar tools GOG predefinidas
+  - Ahora Gemini ejecuta comandos directamente vía SKILL.md
+  - Más flexible y escalable
+- 🔄 revert: eliminar sistema de routing de skills
+- 🔧 fix: añadir /opt/gogcli al PATH para ejecución de comandos
+- 📝 docs: actualizar SKILL.md con ejemplos de fechas y timezone
+- 📝 docs: crear prompt.py con system prompt separado
+- 🔧 fix: prompt mejorado para fechas y tareas serias
+  - get_time() para cualquier operación con fechas
+  - Regla general: preguntar si información ambigua
+  - Formato +01:00 para Europe/Madrid
+
 ## [2026-03-11]
 
 - 🗑️ remove: eliminar Groq (Whisper) - transcripción vía Gemini (8869991)
