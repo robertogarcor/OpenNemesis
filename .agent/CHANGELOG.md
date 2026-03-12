@@ -20,6 +20,12 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
   - get_time() para cualquier operación con fechas
   - Regla general: preguntar si información ambigua
   - Formato +01:00 para Europe/Madrid
+- 🔧 fix: procesar function calls recursivamente hasta completar tarea
+  - El agente ahora encadena múltiples llamadas a tools
+- 📝 docs: clarificar búsqueda de correos enviados
+  - Usar "from:me" para buscar correos enviados
+  - Clarificar cómo responder "A quién envié"
+- ⏳ pending: búsqueda de destinatarios en correos enviados
 
 ## [2026-03-11]
 

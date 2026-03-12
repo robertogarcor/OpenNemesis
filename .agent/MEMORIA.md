@@ -38,6 +38,12 @@ OpenNemesis es un agente de IA diseñado para ser sencillo, funcional, escalable
   - [x] Contexto de skills incluido en system prompt
   - [x] Tool genérica execute_command para ejecución directa
   - [x] Nueva skill = solo añadir carpeta con SKILL.md
+- [x] Prompt separado en prompt.py
+- [x] Function calling recursivo (múltiples llamadas en cadena)
+- [x] Mejoras en fechas y timezone
+  - [x] get_time() para operaciones con fechas
+  - [x] Formato +01:00 para Europe/Madrid
+- [ ] Búsqueda de destinatarios en correos enviados (pendiente)
 
 ## Roadmap Futuro
 

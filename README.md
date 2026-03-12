@@ -5,13 +5,15 @@ Agente de IA modular, escalable y seguro inspirado en OpenClaw.
 ## Características
 
 - **Comunicación**: Telegram Bot (texto y voz)
-- **IA**: Google Gemini (gemini-3.1-flash-lite-preview - 500 RPM) con function calling
+- **IA**: Google Gemini (gemini-3.1-flash-lite-preview - 500 RPM) con function calling recursivo
 - **Tools**:
   - Básicas: get_weather, get_time, search_web
-  - Genérica: execute_command (ejecuta cualquier comando)
-- **Skills**: Contexto automático desde ./skills/*/SKILL.md
+  - Genérica: execute_command (ejecuta cualquier comando CLI)
+- **Skills**: Contexto automático desde `./skills/*/SKILL.md`
   - gog: Google Workspace (Gmail, Calendar, Drive, Contacts)
 - **Arquitectura**: Modular y escalable
+  - Sistema de prompts en `prompt.py`
+  - Skills auto-cargables sin código
 
 ## Requisitos
 
@@ -19,6 +21,7 @@ Agente de IA modular, escalable y seguro inspirado en OpenClaw.
 - Entorno virtual `.venv/`
 - Telegram Bot Token
 - Google Gemini API Key
+- GOG CLI (Google Workspace CLI) para Gmail/Calendar/Drive
 
 ## Instalación
 
@@ -41,13 +44,21 @@ python main.py
 
 ```
 OpenNemesis/
-├── .agent/          # Documentación y herramientas del desarrollador
-├── skills/          # Capacidades del agente (gog, etc.)
-├── tools/          # Utilidades adicionales
-├── main.py         # Punto de entrada
-├── .env.local      # Plantilla de configuración
+├── .agent/          # Documentación del desarrollador
+├── skills/          # Skills del agente (carpetas con SKILL.md)
+│   └── gog/         # Google Workspace
+├── tools/           # Utilidades adicionales
+├── prompt.py        # Prompts del sistema
+├── main.py          # Punto de entrada
+├── .env.local       # Plantilla de configuración
 └── requirements.txt
 ```
+
+## Añadir nueva skill
+
+1. Crear carpeta en `skills/`
+2. Añadir `SKILL.md` con documentación
+3. El agente la cargará automáticamente
 
 ## Uso
 
