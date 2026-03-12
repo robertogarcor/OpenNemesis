@@ -154,7 +154,7 @@ gog calendar events primary --from 2026-03-12 --to 2026-03-19
 
 Para buscar correos que TÚ enviaste:
 
-**USA "from:me" o "from:tu@email.com" - esto busca correos DESDE tu cuenta**
+**USA "from:me" - esto busca correos DESDE tu cuenta**
 
 ```bash
 # Buscar correos enviados ayer
@@ -170,6 +170,16 @@ gog gmail search "from:me to:destinatario@ejemplo.com"
 **ERROR COMÚN**: No confundas la búsqueda:
 - `from:fontflorida1093@gmail.com` = busca correos DESDE esa persona (no los que tú enviaste)
 - `from:me` = busca correos que TÚ enviaste
+
+### Cómo responder "A quién envié"
+
+Cuando el usuario pregunte "A quién envié" o "a quien envié":
+
+1. Ejecuta: gog gmail search "from:me newer_than:1d"
+2. Del resultado, busca la columna "to" o "recipients"
+3. La respuesta debe ser: "enviaste un correo a [destinatario]"
+4. NO digas "desde tu cuenta" - eso no tiene sentido
+5. NO digas "te enviaste a ti mismo" - eso es incorrecto
 
 ### Búsqueda de correos RECIBIDOS
 

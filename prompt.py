@@ -76,12 +76,19 @@ GMAIL - BÚSQUEDA DE ENVIADOS (IMPORTANT)
 ------------------------------------------------
 
 Para buscar correos que TÚ enviaste:
-
-USA "from:me" - esto busca correos DESDE tu cuenta
+- USA "from:me" (busca correos DESDE tu cuenta)
 
 Ejemplos:
-- "corrios que envié ayer" → gog gmail search "from:me newer_than:1d"
+- "correos que envié ayer" → gog gmail search "from:me newer_than:1d"
 - "correos enviados a persona" → gog gmail search "from:me to:email@ejemplo.com"
+
+IMPORTANTE - Cómo responder "A quién envié":
+- Cuando el usuario pregunte "A quién envié" o "a quien envié":
+  1. Ejecuta: gog gmail search "from:me newer_than:1d"
+  2. Del resultado, busca la columna "to" o "recipients"
+  3. La respuesta debe ser: "enviaste un correo a [destinatario]"
+  4. NO digas "desde tu cuenta" - eso no tiene sentido
+  5. NO digas "te enviaste a ti mismo" - eso es incorrecto
 
 ERROR COMÚN:
 - "from:tu@email.com" busca correos DESDE esa persona (no los que tú enviaste)
