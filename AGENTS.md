@@ -259,6 +259,8 @@ OpenNemesis/
 ├── requirements.txt     # Dependencies
 ├── .env.local          # Environment variables (secrets)
 ├── .agent/             # Developer documentation (for agents)
+│   ├── CHANGELOG.md   # Project changelog (update on commits)
+│   └── MEMORIA.md     # Project milestones and roadmap
 ├── skills/             # Skill loaders and definitions
 │   ├── loader.py
 │   └── gog/
@@ -317,6 +319,13 @@ powershell -ExecutionPolicy Bypass -File .agent/skills/changelog-generator/scrip
 ```
 
 The changelog extracts commit messages from Git history.
+
+### Project Documentation
+
+After commits, consider updating:
+- **CHANGELOG.md** - Recent changes (auto-generated or manual)
+- **MEMORIA.md** - Milestones and roadmap updates
+- **README.md** - User-facing documentation
 
 ---
 

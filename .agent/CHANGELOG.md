@@ -2,6 +2,11 @@
 
 Todos los cambios notables de este proyecto serán documentados en este archivo.
 
+## [2026-03-14]
+
+- 🐛 fix: exclude __pycache__ from skills loader
+  - Añadido filtro para directorios que empiezan con "_"
+
 ## [2026-03-12]
 
 - ✨ feat: sistema de skills con contexto SKILL.md

@@ -43,7 +43,7 @@ OpenNemesis es un agente de IA diseñado para ser sencillo, funcional, escalable
 - [x] Mejoras en fechas y timezone
   - [x] get_time() para operaciones con fechas
   - [x] Formato +01:00 para Europe/Madrid
-- [ ] Búsqueda de destinatarios en correos enviados (pendiente)
+- [x] Fix: exclude __pycache__ from skills loader
 
 ## Roadmap Futuro
 
