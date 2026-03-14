@@ -63,7 +63,7 @@ def load_all_skills() -> Dict[str, Dict[str, str]]:
         return skills
     
     for entry in SKILLS_DIR.iterdir():
-        if entry.is_dir() and not entry.name.startswith("."):
+        if entry.is_dir() and not entry.name.startswith(".") and not entry.name.startswith("_"):
             skill = load_skill(entry)
             if skill:
                 skills[skill["name"]] = skill
