@@ -297,34 +297,34 @@ Follow Conventional Commits with emojis:
 | fix | 🐛 | Bug fix |
 | docs | 📝 | Documentation |
 | style | 🎨 | Formatting (no code change) |
-| refactor | ♻️ | Code refactoring |
-| test | ✅ | Add/update tests |
-| chore | 🔧 | Build tools, utilities |
+| refactor | ♻️ | Refactorización de código |
+| test | ✅ | Añadir/actualizar tests |
+| chore | 🔧 | Herramientas de build, utilidades |
 
 **Rules:**
-- Max 50 characters in description
-- Use imperative mood ("add button" not "added button")
-- Emoji first
+- Máx 50 caracteres en descripción
+- Usar modo imperativo ("añadir botón" no "añadido botón")
+- Emoji primero
 
 **Example:**
-`✨ feat(ui): add save button`
+`✨ feat(ui): añadir botón de guardar`
 
 ### Changelog
 
-Update CHANGELOG.md after commits:
+Actualizar CHANGELOG.md después de commits:
 
 ```bash
 powershell -ExecutionPolicy Bypass -File .agents/skills/changelog-generator/scripts/update_changelog.ps1
 ```
 
-The changelog extracts commit messages from Git history.
+El changelog extrae los mensajes de commit del historial de Git.
 
 ### Project Documentation
 
-After commits, consider updating:
-- **CHANGELOG.md** - Recent changes (auto-generated or manual)
-- **MEMORIA.md** - Milestones and roadmap updates
-- **README.md** - User-facing documentation
+Después de commits, considera actualizar:
+- **CHANGELOG.md** - Cambios recientes (auto-generado o manual)
+- **MEMORIA.md** - Actualizaciones de hitos y roadmap
+- **README.md** - Documentación para el usuario
 
 ---
 
