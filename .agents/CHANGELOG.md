@@ -2,6 +2,15 @@
 
 Todos los cambios notables de este proyecto serán documentados en este archivo.
 
+## [2026-03-16]
+
+- ♻️ refactor: rename .agent to .agents
+  - Directorio renombrado para seguir convención plural
+  - Actualizadas todas las referencias en AGENTS.md, README.md y skills
+- ♻️ refactor: move execute_command to tools.py
+  - Función extraída de gemini_client.py a tools/tools.py
+  - Código más modular y mantenible
+
 ## [2026-03-14]
 
 - 🐛 fix: exclude __pycache__ from skills loader
