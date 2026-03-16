@@ -69,3 +69,17 @@ Telegram (audio) ← Servidor Python ← LiveKit ← Respuesta
 - Webhook de Telegram para voz
 
 **Estado:** Pendiente de implementación
+
+---
+
+## Tareas Pendientes
+
+### Prioridad Alta
+- [ ] Implementar memoria del agente (persistencia de conversación entre sesiones)
+
+### Prioridad Media
+- [ ] Implementar LiveKit (V2.0) - Voz en tiempo real
+- [ ] Refactorizar imports (mover a top-level donde corresponda)
+
+### Documentación
+- [ ] Actualizar AGENTS.md con reglas de imports (pendiente de análisis)
