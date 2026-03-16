@@ -265,8 +265,7 @@ OpenNemesis/
 │   ├── loader.py
 │   └── gog/
 ├── tools/              # Tool implementations
-│   ├── tools.py        # Core tools
-│   └── gog_tools.py    # GOG CLI tools
+│   └── tools.py        # Core tools
 └── credentials/        # API credentials (never commit)
 ```
 
