@@ -302,6 +302,7 @@ Follow Conventional Commits with emojis:
 | chore | 🔧 | Build tools, utilities |
 
 **Rules:**
+- Idioma: Español (todos los commits en español)
 - Max 50 characters in description
 - Use imperative mood ("add button" not "added button")
 - Emoji first
