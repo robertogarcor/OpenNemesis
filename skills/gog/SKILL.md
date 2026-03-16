@@ -156,18 +156,27 @@ Para buscar correos que TÚ enviaste:
 
 **USA "from:me" - esto busca correos DESDE tu cuenta**
 
-IMPORTANT: Para obtener los DESTINATARIOS (campo "to"), USA mensajes search con JSON:
+IMPORTANT: Para obtener los DESTINATARIOS (campo "to"), SIGUE ESTOS PASOS:
 
+**PASO 1 - Buscar mensajes (obtener IDs):**
 ```bash
-# Buscar correos enviados ayer (para ver destinatarios)
-gog gmail messages search "from:me newer_than:1d" --max 10 --json
-
-# Buscar correos enviados la semana pasada
-gog gmail messages search "from:me newer_than:7d" --max 10 --json
-
-# Buscar correos enviados a un destinatario específico
-gog gmail messages search "from:me to:destinatario@ejemplo.com" --max 10 --json
+gog gmail messages search "from:me after:2026-03-10 before:2026-03-12" --max 10 --json
 ```
+
+El resultado contendrá una lista de mensajes con: id, threadId, date, from, subject
+
+**PASO 2 - Obtener detalle de cada mensaje (para ver destinatario):**
+Para CADA mensaje, ejecuta:
+```bash
+gog gmail get <message_id> --json
+```
+
+Del resultado JSON, busca "To" en: payload.headers
+
+**Ejemplo completo:**
+1. `gog gmail messages search "from:me after:2026-03-10 before:2026-03-12" --max 10 --json`
+2. `gog gmail get 19cdd363106df43b --json`
+3. Del JSON del paso 2, busca: payload.headers -> "To" -> valor
 
 **ERROR COMÚN**: No confundas la búsqueda:
 - `from:fontflorida1093@gmail.com` = busca correos DESDE esa persona (no los que tú enviaste)
@@ -177,10 +186,10 @@ gog gmail messages search "from:me to:destinatario@ejemplo.com" --max 10 --json
 
 Cuando el usuario pregunte "A quién envié" o "a quien envié":
 
-1. Ejecuta: `gog gmail messages search "from:me newer_than:1d" --max 10 --json`
-2. Del resultado JSON, busca en cada mensaje el header "To" en `payload.headers`
-3. Extrae los destinatarios únicos
-4. La respuesta debe ser: "enviaste un correo a [destinatario]"
+1. Ejecuta messages search para obtener IDs
+2. Para cada ID, ejecuta "gog gmail get <id> --json"
+3. Extrae "To" de payload.headers en cada resultado
+4. La respuesta debe ser: "enviaste correos a: [destinatario1], [destinatario2]..."
 5. NO digas "desde tu cuenta" - eso no tiene sentido
 6. NO digas "te enviaste a ti mismo" - eso es incorrecto
 

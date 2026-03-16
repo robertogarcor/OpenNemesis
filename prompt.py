@@ -78,18 +78,30 @@ GMAIL - BÚSQUEDA DE ENVIADOS (IMPORTANT)
 Para buscar correos que TÚ enviaste:
 - USA "from:me" (busca correos DESDE tu cuenta)
 
-IMPORTANT: Para obtener los DESTINATARIOS (campo "to"), USA mensajes search con JSON:
+IMPORTANT: Para obtener los DESTINATARIOS (campo "to"), SIGUE ESTOS PASOS:
 
-Ejemplos:
-- "correos que envié ayer" → gog gmail messages search "from:me newer_than:1d" --max 10 --json
-- "correos enviados a persona" → gog gmail messages search "from:me to:email@ejemplo.com" --max 10 --json
+PASO 1 - Buscar mensajes (obtener IDs):
+gog gmail messages search "from:me after:2026-03-10 before:2026-03-12" --max 10 --json
+
+El resultado contendrá una lista de mensajes con: id, threadId, date, from, subject
+
+PASO 2 - Obtener detalle de cada mensaje (para ver destinatario):
+Para CADA mensaje, ejecuta:
+gog gmail get <message_id> --json
+
+Del resultado JSON, busca "To" en: payload.headers
+
+Ejemplo completo:
+1. gog gmail messages search "from:me after:2026-03-10 before:2026-03-12" --max 10 --json
+2. gog gmail get 19cdd363106df43b --json
+3. Del JSON del paso 2, busca: payload.headers -> "To" -> valor
 
 IMPORTANTE - Cómo responder "A quién envié":
 - Cuando el usuario pregunte "A quién envié" o "a quien envié":
-  1. Ejecuta: gog gmail messages search "from:me newer_than:1d" --max 10 --json
-  2. Del resultado JSON, busca en cada mensaje el header "To" o "to" en "payload.headers"
-  3. Extrae los destinatarios únicos
-  4. La respuesta debe ser: "enviaste un correo a [destinatario]"
+  1. Ejecuta messages search para obtener IDs
+  2. Para cada ID, ejecuta "gog gmail get <id> --json"
+  3. Extrae "To" de payload.headers en cada resultado
+  4. La respuesta debe ser: "enviaste correos a: [destinatario1], [destinatario2]..."
   5. NO digas "desde tu cuenta" - eso no tiene sentido
   6. NO digas "te enviaste a ti mismo" - eso es incorrecto
 
