@@ -156,15 +156,17 @@ Para buscar correos que TÚ enviaste:
 
 **USA "from:me" - esto busca correos DESDE tu cuenta**
 
+IMPORTANT: Para obtener los DESTINATARIOS (campo "to"), USA mensajes search con JSON:
+
 ```bash
-# Buscar correos enviados ayer
-gog gmail search "from:me newer_than:1d"
+# Buscar correos enviados ayer (para ver destinatarios)
+gog gmail messages search "from:me newer_than:1d" --max 10 --json
 
 # Buscar correos enviados la semana pasada
-gog gmail search "from:me newer_than:7d"
+gog gmail messages search "from:me newer_than:7d" --max 10 --json
 
 # Buscar correos enviados a un destinatario específico
-gog gmail search "from:me to:destinatario@ejemplo.com"
+gog gmail messages search "from:me to:destinatario@ejemplo.com" --max 10 --json
 ```
 
 **ERROR COMÚN**: No confundas la búsqueda:
@@ -175,11 +177,12 @@ gog gmail search "from:me to:destinatario@ejemplo.com"
 
 Cuando el usuario pregunte "A quién envié" o "a quien envié":
 
-1. Ejecuta: gog gmail search "from:me newer_than:1d"
-2. Del resultado, busca la columna "to" o "recipients"
-3. La respuesta debe ser: "enviaste un correo a [destinatario]"
-4. NO digas "desde tu cuenta" - eso no tiene sentido
-5. NO digas "te enviaste a ti mismo" - eso es incorrecto
+1. Ejecuta: `gog gmail messages search "from:me newer_than:1d" --max 10 --json`
+2. Del resultado JSON, busca en cada mensaje el header "To" en `payload.headers`
+3. Extrae los destinatarios únicos
+4. La respuesta debe ser: "enviaste un correo a [destinatario]"
+5. NO digas "desde tu cuenta" - eso no tiene sentido
+6. NO digas "te enviaste a ti mismo" - eso es incorrecto
 
 ### Búsqueda de correos RECIBIDOS
 
