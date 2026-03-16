@@ -81,33 +81,7 @@ class GeminiClient:
     def _init_tools(self):
         """Inicializa las tools disponibles"""
         try:
-            from tools.tools import get_weather, get_time, search_web
-            import subprocess
-            import os
-            
-            def execute_command(command: str) -> str:
-                """Execute a shell command"""
-                try:
-                    env = os.environ.copy()
-                    env["GOG_ACCOUNT"] = os.getenv("GOG_ACCOUNT", "")
-                    if "/opt/gogcli" not in env.get("PATH", ""):
-                        env["PATH"] = "/opt/gogcli:" + env.get("PATH", "")
-                    
-                    result = subprocess.run(
-                        command,
-                        shell=True,
-                        capture_output=True,
-                        text=True,
-                        timeout=60,
-                        env=env
-                    )
-                    if result.returncode != 0:
-                        return f"Error: {result.stderr}"
-                    return result.stdout if result.stdout else "Comando ejecutado correctamente."
-                except subprocess.TimeoutExpired:
-                    return "Error: Timeout ejecutando comando"
-                except Exception as e:
-                    return f"Error: {str(e)}"
+            from tools.tools import get_weather, get_time, search_web, execute_command
             
             self.tools = {
                 "execute_command": execute_command,

@@ -258,7 +258,7 @@ OpenNemesis/
 ├── tts_client.py        # Text-to-speech client
 ├── requirements.txt     # Dependencies
 ├── .env.local          # Environment variables (secrets)
-├── .agent/             # Developer documentation (for agents)
+├── .agents/            # Developer documentation (for agents)
 │   ├── CHANGELOG.md   # Project changelog (update on commits)
 │   └── MEMORIA.md     # Project milestones and roadmap
 ├── skills/             # Skill loaders and definitions
@@ -315,7 +315,7 @@ Follow Conventional Commits with emojis:
 Update CHANGELOG.md after commits:
 
 ```bash
-powershell -ExecutionPolicy Bypass -File .agent/skills/changelog-generator/scripts/update_changelog.ps1
+powershell -ExecutionPolicy Bypass -File .agents/skills/changelog-generator/scripts/update_changelog.ps1
 ```
 
 The changelog extracts commit messages from Git history.
@@ -331,10 +331,10 @@ After commits, consider updating:
 
 ## Creating New Skills
 
-Skills are stored in `.agent/skills/<skill_name>/`:
+Skills are stored in `.agents/skills/<skill_name>/`:
 
 ```
-.agent/skills/
+.agents/skills/
 ├── SKILL.md           # Required: name + description in YAML frontmatter
 ├── scripts/           # Optional: automation scripts
 ├── examples/          # Optional: usage examples

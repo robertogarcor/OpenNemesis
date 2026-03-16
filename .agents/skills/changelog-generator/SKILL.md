@@ -15,11 +15,11 @@ Esta habilidad permite generar y mantener actualizado un archivo `CHANGELOG.md` 
 ## Cómo usarla
 1. **Actualizar el Changelog**: Ejecuta el script de PowerShell proporcionado.
    ```powershell
-   powershell -ExecutionPolicy Bypass -File .agent/skills/changelog-generator/scripts/update_changelog.ps1
+   powershell -ExecutionPolicy Bypass -File .agents/skills/changelog-generator/scripts/update_changelog.ps1
    ```
 2. **Personalizar**: Puedes pasar un nombre de archivo diferente si lo deseas.
    ```powershell
-   powershell -ExecutionPolicy Bypass -File .agent/skills/changelog-generator/scripts/update_changelog.ps1 -ChangelogFile "HISTORY.md"
+   powershell -ExecutionPolicy Bypass -File .agents/skills/changelog-generator/scripts/update_changelog.ps1 -ChangelogFile "HISTORY.md"
    ```
 
 ## Estructura del Changelog

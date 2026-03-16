@@ -44,7 +44,7 @@ python main.py
 
 ```
 OpenNemesis/
-├── .agent/          # Documentación del desarrollador
+├── .agents/          # Documentación del desarrollador
 ├── skills/          # Skills del agente (carpetas con SKILL.md)
 │   └── gog/         # Google Workspace
 ├── tools/           # Utilidades adicionales

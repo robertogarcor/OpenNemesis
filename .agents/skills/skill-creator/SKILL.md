@@ -13,7 +13,7 @@ Esta habilidad te permite crear y estructurar nuevas habilidades (skills) de man
 - Cuando quieras mejorar la documentación de cómo realizas ciertas tareas.
 
 ## Estructura de una Habilidad
-Una habilidad se organiza en una carpeta dentro de `.agent/skills/` con la siguiente estructura:
+Una habilidad se organiza en una carpeta dentro de `.agents/skills/` con la siguiente estructura:
 - `SKILL.md`: El archivo principal con instrucciones y frontmatter YAML.
 - `scripts/`: (Opcional) Scripts de automatización o ayuda.
 - `examples/`: (Opcional) Ejemplos de uso o implementaciones de referencia.
@@ -21,7 +21,7 @@ Una habilidad se organiza en una carpeta dentro de `.agent/skills/` con la sigui
 
 ## Instrucciones para crear una nueva habilidad
 1. **Definir el propósito**: Asegúrate de que la habilidad tenga un enfoque único y claro.
-2. **Crear la carpeta**: `mkdir .agent/skills/<nombre-de-la-habilidad>`
+2. **Crear la carpeta**: `mkdir .agents/skills/<nombre-de-la-habilidad>`
 3. **Escribir el SKILL.md**:
     - Incluye el frontmatter con `name` y `description` (obligatorio).
     - Usa Markdown para detallar las instrucciones.

@@ -3,7 +3,7 @@ param (
     [string]$Name
 )
 
-$SkillPath = ".agent/skills/$Name"
+$SkillPath = ".agents/skills/$Name"
 $Metadata = @"
 ---
 name: $Name

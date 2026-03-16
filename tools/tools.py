@@ -1,7 +1,8 @@
 import logging
 import requests
-from datetime import datetime
+import subprocess
 import os
+from datetime import datetime
 
 def get_weather(city: str) -> str:
     """Get the current weather for a given city."""
@@ -40,4 +41,29 @@ def search_web(query: str) -> str:
         return f"No results found for '{query}'."
     except Exception as e:
         logging.error(f"Error searching the web for '{query}': {e}")
-        return f"An error occurred while searching the web."    
+        return f"An error occurred while searching the web."
+
+
+def execute_command(command: str) -> str:
+    """Execute a shell command."""
+    try:
+        env = os.environ.copy()
+        env["GOG_ACCOUNT"] = os.getenv("GOG_ACCOUNT", "")
+        if "/opt/gogcli" not in env.get("PATH", ""):
+            env["PATH"] = "/opt/gogcli:" + env.get("PATH", "")
+        
+        result = subprocess.run(
+            command,
+            shell=True,
+            capture_output=True,
+            text=True,
+            timeout=60,
+            env=env
+        )
+        if result.returncode != 0:
+            return f"Error: {result.stderr}"
+        return result.stdout if result.stdout else "Comando ejecutado correctamente."
+    except subprocess.TimeoutExpired:
+        return "Error: Timeout ejecutando comando"
+    except Exception as e:
+        return f"Error: {str(e)}"    
