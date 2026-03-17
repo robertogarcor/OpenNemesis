@@ -96,91 +96,126 @@ class GeminiClient:
             logger.error(f"✗ Error cargando tools: {e}")
             self.tools = {}
     
-    def chat(self, message: str) -> str:
-        """Envía un mensaje y obtiene respuesta (con function calling)"""
+    def _prepare_contents(self, message: str, history: list = None) -> list:
+        """Prepara los contents para Gemini (con o sin historial)"""
+        contents = []
+        
+        # Si hay historial, añadirlo
+        if history:
+            for msg in history:
+                role = msg.get("role", "user")
+                content = msg.get("content", "")
+                if content:
+                    contents.append(types.Content(
+                        role=role,
+                        parts=[types.Part(text=content)]
+                    ))
+        
+        # Añadir mensaje actual
+        contents.append(types.Content(
+            role="user",
+            parts=[types.Part(text=message)]
+        ))
+        
+        return contents
+    
+    def _handle_function_calling(self, contents: list, config) -> str:
+        """Maneja function calling con iteraciones"""
+        max_iterations = 10
+        iteration = 0
+        
+        while iteration < max_iterations:
+            iteration += 1
+            
+            response = self.client.models.generate_content(
+                model=self.model,
+                contents=contents,
+                config=config
+            )
+            
+            if not response.function_calls:
+                if response.text:
+                    return response.text
+                elif contents:
+                    for c in contents:
+                        if c.role == 'function':
+                            for p in c.parts:
+                                if p.function_response:
+                                    return p.function_response.response.get('result', '⚠️ Sin respuesta')
+                return "⚠️ No se pudo obtener una respuesta."
+            
+            logger.info(f"🔧 Function calls detectados: {[fc.name for fc in response.function_calls]}")
+            
+            last_function_call_part = None
+            if response.candidates and response.candidates[0].content.parts:
+                for part in response.candidates[0].content.parts:
+                    if part.function_call:
+                        last_function_call_part = part
+                        break
+            
+            function_responses = []
+            for fc in response.function_calls:
+                tool_name = fc.name
+                tool_args = dict(fc.args) if fc.args else {}
+                
+                if tool_name in self.tools:
+                    logger.info(f"🔧 Ejecutando {tool_name} con args: {tool_args}")
+                    try:
+                        result = self.tools[tool_name](**tool_args)
+                        logger.info(f"🔧 Resultado: {str(result)[:200]}...")
+                    except Exception as e:
+                        logger.error(f"🔧 Error ejecutando {tool_name}: {e}")
+                        result = f"Error: {str(e)}"
+                    
+                    function_responses.append({
+                        "name": tool_name,
+                        "result": result
+                    })
+            
+            contents.append(
+                types.Content(role='model', parts=[last_function_call_part]) if last_function_call_part 
+                else types.Content(role='model', parts=[types.Part(text="")])
+            )
+            
+            for fr in function_responses:
+                contents.append(
+                    types.Content(role='function', parts=[types.Part(
+                        function_response=types.FunctionResponse(
+                            name=fr["name"],
+                            response={"result": fr["result"]}
+                        )
+                    )])
+                )
+        
+        return "⚠️ Demasiadas iteraciones."
+    
+    def _generate(self, message: str, history: list = None) -> str:
+        """Método común para generar respuestas (con function calling)"""
         try:
+            # Preparar system prompt
             system_instruction = get_system_prompt()
             if SKILLS_CONTEXT:
                 system_instruction += "\n\n" + SKILLS_CONTEXT
             
+            # Preparar config con tools
             config = types.GenerateContentConfig(
                 tools=TOOLS_SCHEMA,
                 system_instruction=system_instruction
             )
             
-            contents = [types.Content(role='user', parts=[types.Part(text=message)])]
+            # Preparar contents (con o sin historial)
+            contents = self._prepare_contents(message, history)
             
-            max_iterations = 10
-            iteration = 0
-            
-            while iteration < max_iterations:
-                iteration += 1
-                
-                response = self.client.models.generate_content(
-                    model=self.model,
-                    contents=contents,
-                    config=config
-                )
-                
-                if not response.function_calls:
-                    if response.text:
-                        return response.text
-                    elif contents:
-                        for c in contents:
-                            if c.role == 'function':
-                                for p in c.parts:
-                                    if p.function_response:
-                                        return p.function_response.response.get('result', '⚠️ Sin respuesta')
-                    return "⚠️ No se pudo obtener una respuesta."
-                
-                logger.info(f"🔧 Function calls detectados: {[fc.name for fc in response.function_calls]}")
-                
-                last_function_call_part = None
-                if response.candidates and response.candidates[0].content.parts:
-                    for part in response.candidates[0].content.parts:
-                        if part.function_call:
-                            last_function_call_part = part
-                            break
-                
-                function_responses = []
-                for fc in response.function_calls:
-                    tool_name = fc.name
-                    tool_args = dict(fc.args) if fc.args else {}
-                    
-                    if tool_name in self.tools:
-                        logger.info(f"🔧 Ejecutando {tool_name} con args: {tool_args}")
-                        try:
-                            result = self.tools[tool_name](**tool_args)
-                            logger.info(f"🔧 Resultado: {str(result)[:200]}...")
-                        except Exception as e:
-                            logger.error(f"🔧 Error ejecutando {tool_name}: {e}")
-                            result = f"Error: {str(e)}"
-                        
-                        function_responses.append({
-                            "name": tool_name,
-                            "result": result
-                        })
-                
-                contents.append(
-                    types.Content(role='model', parts=[last_function_call_part]) if last_function_call_part 
-                    else types.Content(role='model', parts=[types.Part(text="")])
-                )
-                
-                for fr in function_responses:
-                    contents.append(
-                        types.Content(role='function', parts=[types.Part(
-                            function_response=types.FunctionResponse(
-                                name=fr["name"],
-                                response={"result": fr["result"]}
-                            )
-                        )])
-                    )
-            
-            return "⚠️ Demasiadas iteraciones."
+            # Ejecutar con function calling
+            return self._handle_function_calling(contents, config)
             
         except Exception as e:
-            logger.error(f"Error en chat: {e}")
-            return "⚠️ Lo siento, hubo un error procesando tu mensaje."
+            logger.error(f"Error en generación: {e}")
+            return "⚠️ Lo siento, hubo un error."
+    
+    def chat(self, message: str) -> str:
+        """Envía un mensaje y obtiene respuesta (con function calling)"""
+        return self._generate(message, history=None)
     
     def chat_simple(self, message: str) -> str:
         """Envía un mensaje sin tools"""
@@ -219,41 +254,5 @@ class GeminiClient:
             return "⚠️ No pude procesar el audio."
     
     def chat_with_history(self, message: str, history: list) -> str:
-        """Chat con historial de conversación"""
-        try:
-            contents = []
-            
-            # Convertir historial al formato de Gemini
-            for msg in history:
-                role = msg.get("role", "user")
-                content = msg.get("content", "")
-                if content:
-                    contents.append(types.Content(
-                        role=role,
-                        parts=[types.Part(text=content)]
-                    ))
-            
-            # Añadir mensaje actual
-            contents.append(types.Content(
-                role="user",
-                parts=[types.Part(text=message)]
-            ))
-            
-            # Incluir system prompt
-            system_instruction = get_system_prompt()
-            if SKILLS_CONTEXT:
-                system_instruction += "\n\n" + SKILLS_CONTEXT
-            
-            config = types.GenerateContentConfig(
-                system_instruction=system_instruction
-            )
-            
-            response = self.client.models.generate_content(
-                model=self.model,
-                contents=contents,
-                config=config
-            )
-            return response.text if response.text else "⚠️ Sin respuesta"
-        except Exception as e:
-            logger.error(f"Error en chat con historial: {e}")
-            return "⚠️ Lo siento, hubo un error."
+        """Chat con historial de conversación (usa el método común con function calling)"""
+        return self._generate(message, history=history)
