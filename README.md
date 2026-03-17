@@ -63,3 +63,11 @@ OpenNemesis/
 ## Uso
 
 Inicia el bot en Telegram y envíale mensajes de texto o audio.
+
+### Comandos disponibles
+
+- `/start` - Iniciar el bot
+- `/status` - Ver estado (modelo, TTS, skills)
+- `/skills` - Listar skills disponibles
+- `/tts` - Activar/desactivar respuestas de voz
+- `/help` - Mostrar ayuda

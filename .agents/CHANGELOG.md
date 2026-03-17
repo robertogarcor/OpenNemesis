@@ -4,10 +4,10 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 ## [2026-03-17]
 
-- ♻️ refactor: mover imports a nivel de módulo
-  - Todos los imports movidos al inicio de cada archivo
-  - main.py, telegram_bot.py, gemini_client.py, prompt.py, tts_client.py, tools/tools.py
-  - Código más limpio y遵循 mejores prácticas Python
+- ✨ feat: añadir comandos /status y /skills al bot
+  - /status muestra modelo, estado TTS y lista de skills
+  - /skills lista skills con descripción
+  - /help actualizado con nuevos comandos
 
 ## [2026-03-16]
 
