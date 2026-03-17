@@ -239,9 +239,19 @@ class GeminiClient:
                 parts=[types.Part(text=message)]
             ))
             
+            # Incluir system prompt
+            system_instruction = get_system_prompt()
+            if SKILLS_CONTEXT:
+                system_instruction += "\n\n" + SKILLS_CONTEXT
+            
+            config = types.GenerateContentConfig(
+                system_instruction=system_instruction
+            )
+            
             response = self.client.models.generate_content(
                 model=self.model,
-                contents=contents
+                contents=contents,
+                config=config
             )
             return response.text if response.text else "⚠️ Sin respuesta"
         except Exception as e:
