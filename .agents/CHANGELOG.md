@@ -2,6 +2,13 @@
 
 Todos los cambios notables de este proyecto serán documentados en este archivo.
 
+## [2026-03-17]
+
+- ♻️ refactor: mover imports a nivel de módulo
+  - Todos los imports movidos al inicio de cada archivo
+  - main.py, telegram_bot.py, gemini_client.py, prompt.py, tts_client.py, tools/tools.py
+  - Código más limpio y遵循 mejores prácticas Python
+
 ## [2026-03-16]
 
 - ♻️ refactor: rename .agent to .agents
