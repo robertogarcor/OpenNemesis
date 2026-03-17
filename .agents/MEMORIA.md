@@ -106,7 +106,9 @@ Telegram (audio) ← Servidor Python ← LiveKit ← Respuesta
 ## Tareas Pendientes
 
 ### Prioridad Alta
-- [ ] Implementar memoria del agente (persistencia de conversación entre sesiones)
+- [ ] Implementar FastAPI como servidor HTTP
+- [ ] Añadir endpoints REST (/health, /chat)
+- [ ] Migrar de polling a webhook
 
 ### Prioridad Media
 - [ ] Implementar LiveKit (V2.0) - Voz en tiempo real
