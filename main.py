@@ -13,6 +13,11 @@ from datetime import datetime
 from pathlib import Path
 from dotenv import load_dotenv
 
+# Cargar variables de entorno al inicio
+env_path = Path(".env.local")
+if env_path.exists():
+    load_dotenv(env_path)
+
 import telegram
 from telegram import Bot
 import google.genai as genai
