@@ -51,8 +51,9 @@ def execute_command(command: str) -> str:
     try:
         env = os.environ.copy()
         env["GOG_ACCOUNT"] = os.getenv("GOG_ACCOUNT", "")
-        if "/opt/gogcli" not in env.get("PATH", ""):
-            env["PATH"] = "/opt/gogcli:" + env.get("PATH", "")
+        gogcli_path = os.getenv("GOGCLI_PATH", "/opt/gogcli")
+        if gogcli_path and gogcli_path not in env.get("PATH", ""):
+            env["PATH"] = gogcli_path + ":" + env.get("PATH", "")
         
         result = subprocess.run(
             command,
