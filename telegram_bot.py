@@ -4,6 +4,7 @@ Manejo de mensajes de texto y voz con TTS opcional
 """
 
 import logging
+import os
 import io
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
@@ -13,6 +14,8 @@ from skills.loader import get_skill_names
 
 logger = logging.getLogger("OpenNemesis.Telegram")
 
+ALLOWED_USER_ID = os.getenv("TELEGRAM_ALLOWED_USER_ID")
+
 
 class TelegramBot:
     def __init__(self, token: str, gemini_client, use_tts: bool = False):
@@ -21,8 +24,26 @@ class TelegramBot:
         self.use_tts = use_tts
         self.application = None
     
+    def _is_allowed_user(self, update: Update) -> bool:
+        """Verifica si el usuario tiene acceso al bot"""
+        if not ALLOWED_USER_ID:
+            logger.warning("⚠️ TELEGRAM_ALLOWED_USER_ID no configurado - permitiendo acceso")
+            return True
+        user_id = str(update.effective_user.id)
+        return user_id == ALLOWED_USER_ID
+    
+    async def _check_access(self, update: Update) -> bool:
+        """Verifica acceso y envía mensaje de error si no tiene acceso"""
+        if not self._is_allowed_user(update):
+            await update.message.reply_text("⛔ Acceso denegado. Este bot es de uso privado.")
+            logger.warning(f"⛔ Usuario no autorizado intent acceder: {update.effective_user.id}")
+            return False
+        return True
+    
     async def start_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Maneja el comando /start"""
+        if not await self._check_access(update):
+            return
         await update.message.reply_text(
             "🎉 ¡Hola! Soy OpenNemesis\n\n"
             "Estoy listo para ayudarte. Envíame un mensaje de texto o audio.\n\n"
@@ -33,6 +54,8 @@ class TelegramBot:
     
     async def help_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Maneja el comando /help"""
+        if not await self._check_access(update):
+            return
         status = "activado" if self.use_tts else "desactivado"
         await update.message.reply_text(
             f"📖 Comandos disponibles:\n"
@@ -46,6 +69,8 @@ class TelegramBot:
     
     async def status_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Maneja el comando /status"""
+        if not await self._check_access(update):
+            return
         tts_status = "✓ Activado" if self.use_tts else "✗ Desactivado"
         skills = get_skill_names()
         skills_list = ", ".join(skills) if skills else "Ninguna"
@@ -59,6 +84,8 @@ class TelegramBot:
     
     async def skills_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Maneja el comando /skills"""
+        if not await self._check_access(update):
+            return
         from skills.loader import load_all_skills
         skills = load_all_skills()
         
@@ -75,12 +102,16 @@ class TelegramBot:
     
     async def tts_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Toggle TTS"""
+        if not await self._check_access(update):
+            return
         self.use_tts = not self.use_tts
         status = "✓ Activado" if self.use_tts else "✗ Desactivado"
         await update.message.reply_text(f"{status} respuestas de voz")
     
     async def handle_text(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Procesa mensajes de texto"""
+        if not await self._check_access(update):
+            return
         user_message = update.message.text
         user = update.message.from_user
         user_name = user.first_name if user else "Usuario"
@@ -98,6 +129,8 @@ class TelegramBot:
     
     async def handle_voice(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Procesa mensajes de voz/audio"""
+        if not await self._check_access(update):
+            return
         voice = update.message.voice
         user = update.message.from_user
         user_name = user.first_name if user else "Usuario"

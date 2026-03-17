@@ -8,6 +8,9 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
   - /status muestra modelo, estado TTS y lista de skills
   - /skills lista skills con descripción
   - /help actualizado con nuevos comandos
+- 🔒 security: añadir filtro de usuario (TELEGRAM_ALLOWED_USER_ID)
+  - Solo el usuario autorizado puede usar el bot
+  - Mensaje de "acceso denegado" para otros usuarios
 
 ## [2026-03-16]
 

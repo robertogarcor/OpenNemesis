@@ -60,6 +60,11 @@ OpenNemesis es un agente de IA diseñado para ser sencillo, funcional, escalable
 - [x] Añadir comando /skills (listar skills con descripción)
 - [x] Actualizar /help con nuevos comandos
 
+### Hito 6: Seguridad - Filtro de Usuario (2026-03-17)
+- [x] Añadir variable TELEGRAM_ALLOWED_USER_ID en .env.local
+- [x] Implementar filtro en todos los handlers
+- [x] Mensaje de acceso denegado para usuarios no autorizados
+
 ## Roadmap Futuro
 
 ### Opción LiveKit Intercalado (V2.0)
