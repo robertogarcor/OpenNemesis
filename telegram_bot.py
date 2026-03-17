@@ -11,11 +11,13 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters, C
 
 from tts_client import text_to_speech_sync
 from skills.loader import get_skill_names
+from db import init_db, save_message, get_history, clear_history, get_message_count
 
 logger = logging.getLogger("OpenNemesis.Telegram")
 
 ALLOWED_USER_IDS = os.getenv("TELEGRAM_ALLOWED_USER_ID", "")
 ALLOWED_USER_IDS_LIST = [uid.strip() for uid in ALLOWED_USER_IDS.split(",") if uid.strip()]
+MAX_HISTORY_MESSAGES = int(os.getenv("MAX_HISTORY_MESSAGES", "50"))
 
 
 class TelegramBot:
@@ -64,6 +66,7 @@ class TelegramBot:
             f"/status - Ver estado del bot\n"
             f"/skills - Listar skills disponibles\n"
             f"/tts - Toggle TTS (actualmente {status})\n"
+            f"/clear - Borrar historial\n"
             f"/help - Mostrar ayuda\n\n"
             f"También puedes enviarme mensajes de voz o texto."
         )
@@ -109,6 +112,13 @@ class TelegramBot:
         status = "✓ Activado" if self.use_tts else "✗ Desactivado"
         await update.message.reply_text(f"{status} respuestas de voz")
     
+    async def clear_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Maneja el comando /clear - borra historial"""
+        if not await self._check_access(update):
+            return
+        count = clear_history()
+        await update.message.reply_text(f"🗑️ Historial borrado: {count} mensajes eliminados.")
+    
     async def handle_text(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Procesa mensajes de texto"""
         if not await self._check_access(update):
@@ -121,7 +131,15 @@ class TelegramBot:
         
         await update.message.chat.send_action("typing")
         
-        response = self.gemini_client.chat(user_message)
+        # Cargar historial de la base de datos
+        history = get_history(MAX_HISTORY_MESSAGES)
+        
+        # Enviar a Gemini con historial
+        response = self.gemini_client.chat_with_history(user_message, history)
+        
+        # Guardar mensajes en la base de datos
+        save_message("user", user_message)
+        save_message("assistant", response)
         
         if self.use_tts and response:
             await self.send_voice_response(update, response)
@@ -156,7 +174,16 @@ class TelegramBot:
         
         await update.message.reply_text(f"🎤 {transcription}")
         
-        response = self.gemini_client.chat(transcription)
+        # Cargar historial
+        history = get_history(MAX_HISTORY_MESSAGES)
+        
+        # Guardar transcripción del usuario
+        save_message("user", f"[audio] {transcription}")
+        
+        response = self.gemini_client.chat_with_history(transcription, history)
+        
+        # Guardar respuesta
+        save_message("assistant", response)
         
         if self.use_tts and response:
             await self.send_voice_response(update, response)
@@ -192,6 +219,10 @@ class TelegramBot:
         """Inicia el bot"""
         logger.info("🚀 Iniciando Telegram Bot...")
         
+        # Inicializar base de datos
+        init_db()
+        logger.info(f"✓ Historial: últimos {MAX_HISTORY_MESSAGES} mensajes")
+        
         self.application = Application.builder().token(self.token).build()
         
         self.application.add_handler(CommandHandler("start", self.start_command))
@@ -199,6 +230,7 @@ class TelegramBot:
         self.application.add_handler(CommandHandler("status", self.status_command))
         self.application.add_handler(CommandHandler("skills", self.skills_command))
         self.application.add_handler(CommandHandler("tts", self.tts_command))
+        self.application.add_handler(CommandHandler("clear", self.clear_command))
         
         self.application.add_handler(
             MessageHandler(filters.VOICE, self.handle_voice)

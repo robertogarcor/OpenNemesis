@@ -65,6 +65,14 @@ OpenNemesis es un agente de IA diseñado para ser sencillo, funcional, escalable
 - [x] Implementar filtro en todos los handlers
 - [x] Mensaje de acceso denegado para usuarios no autorizados
 
+### Hito 7: Persistencia de Conversación (2026-03-17)
+- [x] Crear db.py con SQLite para persistencia
+- [x] Funciones: save_message, get_history, clear_history
+- [x] Integrar persistencia en handle_text y handle_voice
+- [x] Añadir comando /clear para borrar historial
+- [x] Añadir variable MAX_HISTORY_MESSAGES (configurable)
+- [x] Historial unificado (sin user_id) - escalable para futuro multiusuario
+
 ## Roadmap Futuro
 
 ### Opción LiveKit Intercalado (V2.0)

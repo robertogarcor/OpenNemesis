@@ -11,6 +11,12 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 - 🔒 security: añadir filtro de usuario (TELEGRAM_ALLOWED_USER_ID)
   - Solo el usuario autorizado puede usar el bot
   - Mensaje de "acceso denegado" para otros usuarios
+  - Soporte para múltiples usuarios separados por coma
+- 💾 feat: persistencia de conversación con SQLite
+  - Nuevo archivo db.py con funciones de base de datos
+  - Historial guardado entre sesiones
+  - Comando /clear para borrar historial
+  - Variable MAX_HISTORY_MESSAGES configurable
 
 ## [2026-03-16]
 
