@@ -88,6 +88,3 @@ Telegram (audio) ← Servidor Python ← LiveKit ← Respuesta
 
 ### Prioridad Media
 - [ ] Implementar LiveKit (V2.0) - Voz en tiempo real
-
-### Documentación
-- [x] Aplicar reglas de imports del AGENTS.md al código (refactorización completada)
