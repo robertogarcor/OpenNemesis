@@ -46,6 +46,15 @@ OpenNemesis es un agente de IA diseñado para ser sencillo, funcional, escalable
 - [x] Fix: exclude __pycache__ from skills loader
 - [x] Búsqueda de destinatarios en correos enviados (usar messages search + --json)
 
+### Hito 4: Refactorización (2026-03-17)
+- [x] Refactorizar imports (mover a nivel de módulo)
+  - [x] main.py - imports de telegram, google.genai
+  - [x] telegram_bot.py - import de tts_client
+  - [x] gemini_client.py - imports de google.genai, types, io, tools
+  - [x] prompt.py - import de skills.loader
+  - [x] tts_client.py - import de edge_tts
+  - [x] tools/tools.py - import de ddgs
+
 ## Roadmap Futuro
 
 ### Opción LiveKit Intercalado (V2.0)
@@ -79,7 +88,6 @@ Telegram (audio) ← Servidor Python ← LiveKit ← Respuesta
 
 ### Prioridad Media
 - [ ] Implementar LiveKit (V2.0) - Voz en tiempo real
-- [x] Refactorizar imports (mover a top-level donde corresponda)
 
 ### Documentación
-- [ ] Actualizar AGENTS.md con reglas de imports (pendiente de análisis)
+- [x] Actualizar AGENTS.md con reglas de imports (completado en refactorización)
