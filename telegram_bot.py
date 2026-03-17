@@ -27,7 +27,7 @@ class TelegramBot:
     def _is_allowed_user(self, update: Update) -> bool:
         """Verifica si el usuario tiene acceso al bot"""
         if not ALLOWED_USER_ID:
-            logger.warning("⚠️ TELEGRAM_ALLOWED_USER_ID no configurado - permitiendo acceso")
+            logger.info("ℹ️ TELEGRAM_ALLOWED_USER_ID no configurado - filtro deshabilitado")
             return True
         user_id = str(update.effective_user.id)
         return user_id == ALLOWED_USER_ID
