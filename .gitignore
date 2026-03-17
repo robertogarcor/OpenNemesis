@@ -27,6 +27,9 @@ Thumbs.db
 # Logs
 *.log
 
+# Data
+data/
+
 # Distribution / packaging
 dist/
 build/

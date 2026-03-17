@@ -11,13 +11,14 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters, C
 
 from tts_client import text_to_speech_sync
 from skills.loader import get_skill_names
-from db import init_db, save_message, get_history, clear_history, get_message_count
+from data.db import init_db, save_message, get_history, clear_history, get_message_count
 
 logger = logging.getLogger("OpenNemesis.Telegram")
 
 ALLOWED_USER_IDS = os.getenv("TELEGRAM_ALLOWED_USER_ID", "")
 ALLOWED_USER_IDS_LIST = [uid.strip() for uid in ALLOWED_USER_IDS.split(",") if uid.strip()]
 MAX_HISTORY_MESSAGES = int(os.getenv("MAX_HISTORY_MESSAGES", "50"))
+PERSISTENCE_ENABLED = os.getenv("PERSISTENCE_ENABLED", "true").lower() in ("true", "1", "yes")
 
 
 class TelegramBot:
@@ -65,6 +66,7 @@ class TelegramBot:
             f"/start - Iniciar el bot\n"
             f"/status - Ver estado del bot\n"
             f"/skills - Listar skills disponibles\n"
+            f"/history - Ver estado de persistencia\n"
             f"/tts - Toggle TTS (actualmente {status})\n"
             f"/clear - Borrar historial\n"
             f"/help - Mostrar ayuda\n\n"
@@ -112,6 +114,17 @@ class TelegramBot:
         status = "✓ Activado" if self.use_tts else "✗ Desactivado"
         await update.message.reply_text(f"{status} respuestas de voz")
     
+    async def history_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Maneja el comando /history - muestra estado de persistencia"""
+        if not await self._check_access(update):
+            return
+        status = "✅ Activada" if PERSISTENCE_ENABLED else "❌ Desactivada"
+        count = get_message_count() if PERSISTENCE_ENABLED else 0
+        await update.message.reply_text(
+            f"📜 Persistencia: {status}\n"
+            f"Mensajes guardados: {count}"
+        )
+    
     async def clear_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Maneja el comando /clear - borra historial"""
         if not await self._check_access(update):
@@ -131,15 +144,14 @@ class TelegramBot:
         
         await update.message.chat.send_action("typing")
         
-        # Cargar historial de la base de datos
-        history = get_history(MAX_HISTORY_MESSAGES)
-        
-        # Enviar a Gemini con historial
-        response = self.gemini_client.chat_with_history(user_message, history)
-        
-        # Guardar mensajes en la base de datos
-        save_message("user", user_message)
-        save_message("assistant", response)
+        # Persistencia condicional
+        if PERSISTENCE_ENABLED:
+            history = get_history(MAX_HISTORY_MESSAGES)
+            response = self.gemini_client.chat_with_history(user_message, history)
+            save_message("user", user_message)
+            save_message("assistant", response)
+        else:
+            response = self.gemini_client.chat(user_message)
         
         if self.use_tts and response:
             await self.send_voice_response(update, response)
@@ -174,16 +186,14 @@ class TelegramBot:
         
         await update.message.reply_text(f"🎤 {transcription}")
         
-        # Cargar historial
-        history = get_history(MAX_HISTORY_MESSAGES)
-        
-        # Guardar transcripción del usuario
-        save_message("user", f"[audio] {transcription}")
-        
-        response = self.gemini_client.chat_with_history(transcription, history)
-        
-        # Guardar respuesta
-        save_message("assistant", response)
+        # Persistencia condicional
+        if PERSISTENCE_ENABLED:
+            history = get_history(MAX_HISTORY_MESSAGES)
+            save_message("user", f"[audio] {transcription}")
+            response = self.gemini_client.chat_with_history(transcription, history)
+            save_message("assistant", response)
+        else:
+            response = self.gemini_client.chat(transcription)
         
         if self.use_tts and response:
             await self.send_voice_response(update, response)
@@ -230,6 +240,7 @@ class TelegramBot:
         self.application.add_handler(CommandHandler("status", self.status_command))
         self.application.add_handler(CommandHandler("skills", self.skills_command))
         self.application.add_handler(CommandHandler("tts", self.tts_command))
+        self.application.add_handler(CommandHandler("history", self.history_command))
         self.application.add_handler(CommandHandler("clear", self.clear_command))
         
         self.application.add_handler(
