@@ -221,12 +221,29 @@ class GeminiClient:
     def chat_with_history(self, message: str, history: list) -> str:
         """Chat con historial de conversación"""
         try:
-            contents = history + [message]
+            contents = []
+            
+            # Convertir historial al formato de Gemini
+            for msg in history:
+                role = msg.get("role", "user")
+                content = msg.get("content", "")
+                if content:
+                    contents.append(types.Content(
+                        role=role,
+                        parts=[types.Part(text=content)]
+                    ))
+            
+            # Añadir mensaje actual
+            contents.append(types.Content(
+                role="user",
+                parts=[types.Part(text=message)]
+            ))
+            
             response = self.client.models.generate_content(
                 model=self.model,
                 contents=contents
             )
-            return response.text
+            return response.text if response.text else "⚠️ Sin respuesta"
         except Exception as e:
             logger.error(f"Error en chat con historial: {e}")
             return "⚠️ Lo siento, hubo un error."
