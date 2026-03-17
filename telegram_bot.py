@@ -14,7 +14,8 @@ from skills.loader import get_skill_names
 
 logger = logging.getLogger("OpenNemesis.Telegram")
 
-ALLOWED_USER_ID = os.getenv("TELEGRAM_ALLOWED_USER_ID")
+ALLOWED_USER_IDS = os.getenv("TELEGRAM_ALLOWED_USER_ID", "")
+ALLOWED_USER_IDS_LIST = [uid.strip() for uid in ALLOWED_USER_IDS.split(",") if uid.strip()]
 
 
 class TelegramBot:
@@ -26,11 +27,11 @@ class TelegramBot:
     
     def _is_allowed_user(self, update: Update) -> bool:
         """Verifica si el usuario tiene acceso al bot"""
-        if not ALLOWED_USER_ID:
+        if not ALLOWED_USER_IDS_LIST:
             logger.info("ℹ️ TELEGRAM_ALLOWED_USER_ID no configurado - filtro deshabilitado")
             return True
         user_id = str(update.effective_user.id)
-        return user_id == ALLOWED_USER_ID
+        return user_id in ALLOWED_USER_IDS_LIST
     
     async def _check_access(self, update: Update) -> bool:
         """Verifica acceso y envía mensaje de error si no tiene acceso"""
