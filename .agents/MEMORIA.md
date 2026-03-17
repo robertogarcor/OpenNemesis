@@ -64,13 +64,17 @@ OpenNemesis es un agente de IA diseñado para ser sencillo, funcional, escalable
 - [x] Añadir variable TELEGRAM_ALLOWED_USER_ID en .env.local
 - [x] Implementar filtro en todos los handlers
 - [x] Mensaje de acceso denegado para usuarios no autorizados
+- [x] Soporte para múltiples usuarios separados por coma
 
 ### Hito 7: Persistencia de Conversación (2026-03-17)
 - [x] Crear db.py con SQLite para persistencia
+- [x] Mover a directorio data/ (data/db.py, data/conversations.db)
 - [x] Funciones: save_message, get_history, clear_history
 - [x] Integrar persistencia en handle_text y handle_voice
 - [x] Añadir comando /clear para borrar historial
+- [x] Añadir comando /history para ver estado
 - [x] Añadir variable MAX_HISTORY_MESSAGES (configurable)
+- [x] Añadir variable PERSISTENCE_ENABLED (activar/desactivar)
 - [x] Historial unificado (sin user_id) - escalable para futuro multiusuario
 
 ## Roadmap Futuro

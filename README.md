@@ -48,6 +48,7 @@ OpenNemesis/
 ├── skills/          # Skills del agente (carpetas con SKILL.md)
 │   └── gog/         # Google Workspace
 ├── tools/           # Utilidades adicionales
+├── data/            # Datos (base de datos SQLite)
 ├── prompt.py        # Prompts del sistema
 ├── main.py          # Punto de entrada
 ├── .env.local       # Plantilla de configuración
@@ -69,5 +70,7 @@ Inicia el bot en Telegram y envíale mensajes de texto o audio.
 - `/start` - Iniciar el bot
 - `/status` - Ver estado (modelo, TTS, skills)
 - `/skills` - Listar skills disponibles
+- `/history` - Ver estado de persistencia
+- `/clear` - Borrar historial
 - `/tts` - Activar/desactivar respuestas de voz
 - `/help` - Mostrar ayuda

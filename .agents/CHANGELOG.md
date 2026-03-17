@@ -14,9 +14,12 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
   - Soporte para múltiples usuarios separados por coma
 - 💾 feat: persistencia de conversación con SQLite
   - Nuevo archivo db.py con funciones de base de datos
+  - Mover a directorio data/ (data/db.py, data/conversations.db)
   - Historial guardado entre sesiones
   - Comando /clear para borrar historial
+  - Comando /history para ver estado
   - Variable MAX_HISTORY_MESSAGES configurable
+  - Variable PERSISTENCE_ENABLED para activar/desactivar
 
 ## [2026-03-16]
 
