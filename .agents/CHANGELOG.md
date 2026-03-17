@@ -4,6 +4,10 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 ## [2026-03-17]
 
+- 🔧 fix: persistencia con function calling
+  - Refactorizar usando patrón método común
+  - chat() y chat_with_history() ahora comparten lógica
+  - Ambos funcionan con tools
 - 🔧 fix: incluir system prompt en chat con historial
   - El bot ahora recuerda su identidad (OpenNemesis)
 - ✨ feat: añadir comandos /status y /skills al bot
