@@ -4,11 +4,16 @@ Cliente para Google Gemini con soporte multimodal, tools y skills
 """
 
 import logging
+import io
 from typing import Union
 
-logger = logging.getLogger("OpenNemesis.Gemini")
+import google.genai as genai
+from google.genai import types
 
 from prompt import get_system_prompt, reload_skills_context
+from tools.tools import get_weather, get_time, search_web, execute_command
+
+logger = logging.getLogger("OpenNemesis.Gemini")
 
 SKILLS_CONTEXT = reload_skills_context()
 
@@ -71,7 +76,6 @@ class GeminiClient:
     def _init_client(self):
         """Inicializa el cliente de Gemini"""
         try:
-            import google.genai as genai
             self.client = genai.Client(api_key=self.api_key)
             logger.info(f"✓ Cliente Gemini inicializado con modelo: {self.model}")
         except Exception as e:
@@ -81,8 +85,6 @@ class GeminiClient:
     def _init_tools(self):
         """Inicializa las tools disponibles"""
         try:
-            from tools.tools import get_weather, get_time, search_web, execute_command
-            
             self.tools = {
                 "execute_command": execute_command,
                 "get_weather": get_weather,
@@ -97,8 +99,6 @@ class GeminiClient:
     def chat(self, message: str) -> str:
         """Envía un mensaje y obtiene respuesta (con function calling)"""
         try:
-            from google.genai import types
-            
             system_instruction = get_system_prompt()
             if SKILLS_CONTEXT:
                 system_instruction += "\n\n" + SKILLS_CONTEXT
@@ -197,8 +197,6 @@ class GeminiClient:
     def transcribe_audio(self, audio_bytes: bytes) -> str:
         """Transcribe audio usando Gemini (vía file upload)"""
         try:
-            import io
-            
             audio_buffer = io.BytesIO(audio_bytes)
             audio_buffer.name = "audio.ogg"
             

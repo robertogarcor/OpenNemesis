@@ -13,6 +13,10 @@ from datetime import datetime
 from pathlib import Path
 from dotenv import load_dotenv
 
+import telegram
+from telegram import Bot
+import google.genai as genai
+
 nest_asyncio.apply()
 
 from telegram_bot import TelegramBot
@@ -58,17 +62,11 @@ def load_environment():
     return True
 
 
-import asyncio
-
-
 def validate_telegram_connection():
     """Valida la conexión con Telegram Bot API"""
     logger.info("🔌 Validando conexión con Telegram...")
     
     try:
-        import telegram
-        from telegram import Bot
-        
         async def check_bot():
             token = os.getenv("TELEGRAM_BOT_TOKEN")
             if not token:
@@ -100,8 +98,6 @@ def validate_gemini_connection():
     logger.info("🔌 Validando conexión con Google Gemini...")
     
     try:
-        import google.genai as genai
-        
         api_key = os.getenv("GEMINI_API_KEY")
         model = os.getenv("GEMINI_MODEL", "gemini-3.1-flash-lite-preview")
         

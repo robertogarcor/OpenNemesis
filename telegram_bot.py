@@ -8,6 +8,8 @@ import io
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
+from tts_client import text_to_speech_sync
+
 logger = logging.getLogger("OpenNemesis.Telegram")
 
 
@@ -98,8 +100,6 @@ class TelegramBot:
     async def send_voice_response(self, update: Update, text: str):
         """Envía respuesta como voz usando TTS + texto"""
         try:
-            from tts_client import text_to_speech_sync
-            
             await update.message.chat.send_action("record_voice")
             
             audio_bytes = text_to_speech_sync(text)

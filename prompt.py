@@ -3,6 +3,10 @@ OpenNemesis - System Prompts
 Definición de prompts del sistema para Gemini
 """
 
+import logging
+
+from skills.loader import get_skills_context
+
 SYSTEM_PROMPT = """
 Eres OpenNemesis, un asistente de IA que puede usar herramientas para completar tareas.
 
@@ -181,9 +185,7 @@ def reload_skills_context():
     """Recarga el contexto de las skills"""
     global SKILL_CONTEXT
     try:
-        from skills.loader import get_skills_context
         return get_skills_context()
     except Exception as e:
-        import logging
         logging.getLogger("OpenNemesis").error(f"Error cargando skills: {e}")
         return ""

@@ -7,6 +7,8 @@ import asyncio
 import io
 import logging
 
+import edge_tts
+
 logger = logging.getLogger("OpenNemesis.TTS")
 
 VOICES = {
@@ -18,8 +20,6 @@ VOICES = {
 async def text_to_speech(text: str, lang: str = "es") -> bytes:
     """Convierte texto a audio usando Edge TTS"""
     try:
-        import edge_tts
-        
         voice = VOICES.get(lang, VOICES["default"])
         
         communicate = edge_tts.Communicate(text, voice)

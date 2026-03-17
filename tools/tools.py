@@ -1,8 +1,11 @@
 import logging
-import requests
-import subprocess
 import os
+import subprocess
 from datetime import datetime
+
+import requests
+from ddgs import DDGS
+
 
 def get_weather(city: str) -> str:
     """Get the current weather for a given city."""
@@ -32,7 +35,6 @@ def get_time() -> str:
 def search_web(query: str) -> str:
     """Search the web using DuckDuckGo."""
     try:
-        from ddgs import DDGS
         results = DDGS().text(query, max_results=5)
         if results:
             formatted = "\n".join([f"{r.get('title', '')}: {r.get('href', '')}" for r in results])
