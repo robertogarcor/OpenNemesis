@@ -107,8 +107,10 @@ Telegram (audio) ← Servidor Python ← LiveKit ← Respuesta
 
 ### Prioridad Alta
 - [ ] Implementar FastAPI como servidor HTTP
+  - python main.py         → validación (por defecto)
+  - python main.py run    → modo consola (polling)
+  - python main.py api    → modo FastAPI
 - [ ] Añadir endpoints REST (/health, /chat)
-- [ ] Migrar de polling a webhook
 
 ### Prioridad Media
 - [ ] Implementar LiveKit (V2.0) - Voz en tiempo real
