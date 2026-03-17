@@ -9,6 +9,7 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
 from tts_client import text_to_speech_sync
+from skills.loader import get_skill_names
 
 logger = logging.getLogger("OpenNemesis.Telegram")
 
@@ -36,10 +37,41 @@ class TelegramBot:
         await update.message.reply_text(
             f"📖 Comandos disponibles:\n"
             f"/start - Iniciar el bot\n"
+            f"/status - Ver estado del bot\n"
+            f"/skills - Listar skills disponibles\n"
             f"/tts - Toggle TTS (actualmente {status})\n"
             f"/help - Mostrar ayuda\n\n"
             f"También puedes enviarme mensajes de voz o texto."
         )
+    
+    async def status_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Maneja el comando /status"""
+        tts_status = "✓ Activado" if self.use_tts else "✗ Desactivado"
+        skills = get_skill_names()
+        skills_list = ", ".join(skills) if skills else "Ninguna"
+        
+        await update.message.reply_text(
+            f"📊 Estado de OpenNemesis\n\n"
+            f"Modelo: {self.gemini_client.model}\n"
+            f"TTS: {tts_status}\n"
+            f"Skills: {skills_list}"
+        )
+    
+    async def skills_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Maneja el comando /skills"""
+        from skills.loader import load_all_skills
+        skills = load_all_skills()
+        
+        if not skills:
+            await update.message.reply_text("📦 No hay skills instaladas.")
+            return
+        
+        msg = "📦 Skills disponibles:\n\n"
+        for name, skill in skills.items():
+            desc = skill.get("description", "Sin descripción")
+            msg += f"• {name}: {desc}\n"
+        
+        await update.message.reply_text(msg)
     
     async def tts_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Toggle TTS"""
@@ -130,6 +162,8 @@ class TelegramBot:
         
         self.application.add_handler(CommandHandler("start", self.start_command))
         self.application.add_handler(CommandHandler("help", self.help_command))
+        self.application.add_handler(CommandHandler("status", self.status_command))
+        self.application.add_handler(CommandHandler("skills", self.skills_command))
         self.application.add_handler(CommandHandler("tts", self.tts_command))
         
         self.application.add_handler(

@@ -55,6 +55,11 @@ OpenNemesis es un agente de IA diseñado para ser sencillo, funcional, escalable
   - [x] tts_client.py - import de edge_tts
   - [x] tools/tools.py - import de ddgs
 
+### Hito 5: Comandos Adicionales (2026-03-17)
+- [x] Añadir comando /status (modelo, TTS, skills)
+- [x] Añadir comando /skills (listar skills con descripción)
+- [x] Actualizar /help con nuevos comandos
+
 ## Roadmap Futuro
 
 ### Opción LiveKit Intercalado (V2.0)
