@@ -115,6 +115,22 @@ def get_message_count(user_id: str) -> int:
         return 0
 
 
+def get_total_message_count() -> int:
+    """Retorna el número total de mensajes en la base de datos"""
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+        
+        cursor.execute("SELECT COUNT(*) FROM messages")
+        count = cursor.fetchone()[0]
+        
+        conn.close()
+        return count
+    except Exception as e:
+        logger.error(f"✗ Error contando mensajes: {e}")
+        return 0
+
+
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     

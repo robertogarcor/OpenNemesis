@@ -161,6 +161,26 @@ def check_tools():
         logger.warning("⚠ No hay tools instaladas")
 
 
+def check_persistence():
+    """Verifica el estado de la persistencia"""
+    logger.info("💾 Verificando persistencia...")
+    
+    persistence_enabled = os.getenv("PERSISTENCE_ENABLED", "true").lower() in ("true", "1", "yes")
+    max_history = os.getenv("MAX_HISTORY_MESSAGES", "50")
+    
+    if persistence_enabled:
+        logger.info(f"✓ Persistencia: Activada (máx. {max_history} mensajes)")
+        try:
+            from data.db import get_total_message_count
+            count = get_total_message_count()
+            if count > 0:
+                logger.info(f"  Mensajes en BD: {count}")
+        except Exception as e:
+            logger.warning(f"⚠ Error consultando BD: {e}")
+    else:
+        logger.info("✗ Persistencia: Desactivada")
+
+
 def main(mode: str = "validate"):
     """Función principal"""
     print_banner()
@@ -179,6 +199,7 @@ def main(mode: str = "validate"):
     
     check_skills()
     check_tools()
+    check_persistence()
     
     logger.info("=" * 60)
     logger.info("RESUMEN DE VALIDACIÓN")
