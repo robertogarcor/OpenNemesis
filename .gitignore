@@ -28,7 +28,8 @@ Thumbs.db
 *.log
 
 # Data
-data/
+data/*.db
+data/conversations.db
 
 # Distribution / packaging
 dist/
