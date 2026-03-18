@@ -21,7 +21,7 @@ Agente de IA modular, escalable y seguro inspirado en OpenClaw.
 - Entorno virtual `.venv/`
 - Telegram Bot Token
 - Google Gemini API Key
-- GOG CLI (incluido en `bin/gog`)
+- GOG CLI (incluido en `bin/gogcli/gog`, requiere autenticación OAuth)
 
 ## Quick Start
 
@@ -55,6 +55,24 @@ python main.py
 La base de datos SQLite se crea automáticamente en `data/conversations.db` al iniciar el bot. Almacena el historial de conversación por usuario de Telegram.
 
 No es necesario crear la base de datos manualmente.
+
+## GOG CLI (Google Workspace)
+
+GOG CLI está incluido en `bin/gogcli/gog` y se usa para Gmail, Calendar, Drive y Contacts.
+
+### Primera instalación
+
+Si es la primera vez que ejecutas GOG en esta máquina, necesitas autenticar:
+
+```bash
+./bin/gogcli/gog auth add tu@email.com --services gmail,calendar,drive,contacts
+```
+
+Se abrirá el navegador para autorizar. Los tokens se guardan en `~/.config/gog/` (no en el proyecto).
+
+### Reinstalación en otra máquina
+
+Los tokens OAuth no se incluyen en el proyecto. Al instalar en otra máquina, debes re-autenticar GOG con el mismo comando anterior.
 
 ## Estructura
 
