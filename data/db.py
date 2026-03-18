@@ -56,6 +56,8 @@ def save_message(user_id: str, role: str, content: str):
         
         conn.commit()
         conn.close()
+        
+        logger.info(f"DB: Guardado mensaje para user_id={user_id}, role={role}")
     except Exception as e:
         logger.error(f"✗ Error guardando mensaje: {e}")
 
@@ -109,6 +111,8 @@ def get_message_count(user_id: str) -> int:
         count = cursor.fetchone()[0]
         
         conn.close()
+        
+        logger.info(f"DB: Consultando user_id={user_id}, mensajes encontrados={count}")
         return count
     except Exception as e:
         logger.error(f"✗ Error contando mensajes: {e}")
