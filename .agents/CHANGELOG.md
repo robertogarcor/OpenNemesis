@@ -9,6 +9,9 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
   - save_message, get_history, clear_history ahora reciben user_id
   - /history y /clear trabajan solo con historial del usuario
   - Cada usuario tiene contexto independiente
+- ✨ feat: script de setup automatizado
+  - scripts/setup.sh crea venv, instala deps, copia GOG, configura .env
+  - Quick Start en README.md
 
 ## [2026-03-17]
 

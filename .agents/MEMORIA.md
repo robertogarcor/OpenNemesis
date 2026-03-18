@@ -83,6 +83,15 @@ OpenNemesis es un agente de IA diseñado para ser sencillo, funcional, escalable
 - [x] /history y /clear trabajan por usuario
 - [x] Cada usuario tiene su propio historial independiente
 
+### Hito 9: Script de Setup (2026-03-18)
+- [x] Crear scripts/setup.sh
+  - [x] Crear entorno virtual si no existe
+  - [x] Instalar dependencias
+  - [x] Copiar GOG a bin/ si existe
+  - [x] Copiar .env.local → .env
+  - [x] Inicializar base de datos
+- [x] Actualizar README con Quick Start
+
 ## Roadmap Futuro
 
 ### Opción LiveKit Intercalado (V2.0)
