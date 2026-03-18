@@ -27,19 +27,11 @@ echo -e "${YELLOW}→ Instalando dependencias...${NC}"
 pip install -r requirements.txt
 echo -e "${GREEN}✓ Dependencias instaladas${NC}"
 
-# 3. Copy GOG binary if exists in /opt/gogcli/gog
-if [ -f "/opt/gogcli/gog" ]; then
-    echo -e "${YELLOW}→ Copiando binario GOG...${NC}"
-    mkdir -p bin
-    cp /opt/gogcli/gog bin/gog
-    chmod +x bin/gog
-    echo -e "${GREEN}✓ GOG copiado a bin/gog${NC}"
+# 3. Verify GOG binary
+if [ -f "bin/gogcli/gog" ]; then
+    echo -e "${GREEN}✓ GOG encontrado en bin/gogcli/gog${NC}"
 else
-    if [ ! -f "bin/gog" ]; then
-        echo -e "${YELLOW}⚠ GOG no encontrado. Copia /opt/gog a bin/gog manualmente${NC}"
-    else
-        echo -e "${GREEN}✓ GOG ya existe en bin/gog${NC}"
-    fi
+    echo -e "${YELLOW}⚠ GOG no encontrado en bin/gogcli/gog${NC}"
 fi
 
 # 4. Copy .env.local to .env if not exists
