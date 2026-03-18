@@ -40,6 +40,12 @@ cp .env.local .env
 python main.py
 ```
 
+## Base de datos
+
+La base de datos SQLite se crea automáticamente en `data/conversations.db` al iniciar el bot. Almacena el historial de conversación por usuario de Telegram.
+
+No es necesario crear la base de datos manualmente.
+
 ## Estructura
 
 ```
