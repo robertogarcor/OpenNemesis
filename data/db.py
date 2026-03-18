@@ -20,8 +20,6 @@ def init_db():
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
         
-        cursor.execute("DROP TABLE IF EXISTS messages")
-        
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS messages (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -140,4 +138,4 @@ if __name__ == "__main__":
     
     print("=== DB Test ===")
     init_db()
-    print(f"Mensajes en DB: {get_message_count()}")
+    print(f"Mensajes totales en DB: {get_total_message_count()}")
