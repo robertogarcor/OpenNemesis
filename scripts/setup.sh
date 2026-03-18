@@ -27,11 +27,11 @@ echo -e "${YELLOW}→ Instalando dependencias...${NC}"
 pip install -r requirements.txt
 echo -e "${GREEN}✓ Dependencias instaladas${NC}"
 
-# 3. Copy GOG binary if exists in /opt/gog
-if [ -f "/opt/gog" ]; then
+# 3. Copy GOG binary if exists in /opt/gogcli/gog
+if [ -f "/opt/gogcli/gog" ]; then
     echo -e "${YELLOW}→ Copiando binario GOG...${NC}"
     mkdir -p bin
-    cp /opt/gog bin/gog
+    cp /opt/gogcli/gog bin/gog
     chmod +x bin/gog
     echo -e "${GREEN}✓ GOG copiado a bin/gog${NC}"
 else
