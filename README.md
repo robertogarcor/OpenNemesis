@@ -21,9 +21,19 @@ Agente de IA modular, escalable y seguro inspirado en OpenClaw.
 - Entorno virtual `.venv/`
 - Telegram Bot Token
 - Google Gemini API Key
-- GOG CLI (Google Workspace CLI) para Gmail/Calendar/Drive
+- GOG CLI (incluido en `bin/gog`)
 
-## Instalación
+## Quick Start
+
+```bash
+# Ejecutar script de setup (crea venv, instala deps, copia GOG, configura .env)
+./scripts/setup.sh
+
+# Iniciar el bot
+python main.py run
+```
+
+## Instalación manual
 
 ```bash
 # Activar entorno virtual
@@ -51,6 +61,8 @@ No es necesario crear la base de datos manualmente.
 ```
 OpenNemesis/
 ├── .agents/          # Documentación del desarrollador
+├── bin/              # Binarios (gog)
+├── scripts/          # Scripts de utilidad
 ├── skills/          # Skills del agente (carpetas con SKILL.md)
 │   └── gog/         # Google Workspace
 ├── tools/           # Utilidades adicionales
