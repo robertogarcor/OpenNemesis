@@ -77,6 +77,12 @@ OpenNemesis es un agente de IA diseñado para ser sencillo, funcional, escalable
 - [x] Añadir variable PERSISTENCE_ENABLED (activar/desactivar)
 - [x] Historial unificado (sin user_id) - escalable para futuro multiusuario
 
+### Hito 8: Persistencia por Usuario (2026-03-18)
+- [x] Añadir columna user_id a tabla messages
+- [x] Actualizar funciones de persistencia con user_id
+- [x] /history y /clear trabajan por usuario
+- [x] Cada usuario tiene su propio historial independiente
+
 ## Roadmap Futuro
 
 ### Opción LiveKit Intercalado (V2.0)

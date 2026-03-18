@@ -115,27 +115,30 @@ class TelegramBot:
         await update.message.reply_text(f"{status} respuestas de voz")
     
     async def history_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
-        """Maneja el comando /history - muestra estado de persistencia"""
+        """Maneja el comando /history - muestra estado de persistencia del usuario"""
         if not await self._check_access(update):
             return
+        user_id = str(update.effective_user.id)
         status = "✅ Activada" if PERSISTENCE_ENABLED else "❌ Desactivada"
-        count = get_message_count() if PERSISTENCE_ENABLED else 0
+        count = get_message_count(user_id) if PERSISTENCE_ENABLED else 0
         await update.message.reply_text(
             f"📜 Persistencia: {status}\n"
             f"Mensajes guardados: {count}"
         )
     
     async def clear_command(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
-        """Maneja el comando /clear - borra historial"""
+        """Maneja el comando /clear - borra historial del usuario"""
         if not await self._check_access(update):
             return
-        count = clear_history()
+        user_id = str(update.effective_user.id)
+        count = clear_history(user_id)
         await update.message.reply_text(f"🗑️ Historial borrado: {count} mensajes eliminados.")
     
     async def handle_text(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Procesa mensajes de texto"""
         if not await self._check_access(update):
             return
+        user_id = str(update.effective_user.id)
         user_message = update.message.text
         user = update.message.from_user
         user_name = user.first_name if user else "Usuario"
@@ -146,10 +149,10 @@ class TelegramBot:
         
         # Persistencia condicional
         if PERSISTENCE_ENABLED:
-            history = get_history(MAX_HISTORY_MESSAGES)
+            history = get_history(user_id, MAX_HISTORY_MESSAGES)
             response = self.gemini_client.chat_with_history(user_message, history)
-            save_message("user", user_message)
-            save_message("assistant", response)
+            save_message(user_id, "user", user_message)
+            save_message(user_id, "assistant", response)
         else:
             response = self.gemini_client.chat(user_message)
         
@@ -162,6 +165,7 @@ class TelegramBot:
         """Procesa mensajes de voz/audio"""
         if not await self._check_access(update):
             return
+        user_id = str(update.effective_user.id)
         voice = update.message.voice
         user = update.message.from_user
         user_name = user.first_name if user else "Usuario"
@@ -188,10 +192,10 @@ class TelegramBot:
         
         # Persistencia condicional
         if PERSISTENCE_ENABLED:
-            history = get_history(MAX_HISTORY_MESSAGES)
-            save_message("user", f"[audio] {transcription}")
+            history = get_history(user_id, MAX_HISTORY_MESSAGES)
+            save_message(user_id, "user", f"[audio] {transcription}")
             response = self.gemini_client.chat_with_history(transcription, history)
-            save_message("assistant", response)
+            save_message(user_id, "assistant", response)
         else:
             response = self.gemini_client.chat(transcription)
         

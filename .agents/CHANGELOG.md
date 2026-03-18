@@ -2,6 +2,14 @@
 
 Todos los cambios notables de este proyecto serán documentados en este archivo.
 
+## [2026-03-18]
+
+- ✨ feat: historial por usuario de Telegram
+  - Añadir columna user_id a tabla messages
+  - save_message, get_history, clear_history ahora reciben user_id
+  - /history y /clear trabajan solo con historial del usuario
+  - Cada usuario tiene contexto independiente
+
 ## [2026-03-17]
 
 - 🔧 fix: persistencia con function calling
