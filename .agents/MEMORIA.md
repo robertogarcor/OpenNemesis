@@ -101,6 +101,13 @@ OpenNemesis es un agente de IA diseñado para ser sencillo, funcional, escalable
 - [x] Nueva subsección en skills/gog/SKILL.md
 - [x] Testeado y funcionando correctamente
 
+### Hito 11: Detección de Follow-ups (2026-03-19)
+- [x] Nueva sección en prompt.py: "DETECCIÓN DE FOLLOW-UPS"
+- [x] Detecta cuando usuario menciona proyecto/tema/reunión pasado
+- [x] Busca correos automáticamente con gog gmail search
+- [x] Muestra lista con remitente + asunto + fecha
+- [x] No activa con saludos o preguntas generales
+
 ## Roadmap Futuro
 
 ### Opción LiveKit Intercalado (V2.0)
@@ -137,4 +144,11 @@ Telegram (audio) ← Servidor Python ← LiveKit ← Respuesta
 - [ ] Añadir endpoints REST (/health, /chat)
 
 ### Prioridad Media
+- [ ] Resumen Matutino (Daily Briefing)
+  - Mostrar summary automático al inicio del día
+  - Requiere tabla user_state en BD
+  - Condicional según PERSISTENCE_ENABLED
+  - Pendiente de revisar
+
+### Prioridad Baja
 - [ ] Implementar LiveKit (V2.0) - Voz en tiempo real

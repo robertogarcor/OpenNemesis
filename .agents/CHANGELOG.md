@@ -11,6 +11,11 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
   - Si no hay conflicto: crear directamente
   - Nueva subsección en skills/gog/SKILL.md para verificación y actualización
   - El agente ahora evita duplicar eventos en el mismo horario
+- ✨ feat: detección de follow-ups
+  - Nueva sección en prompt.py: "DETECCIÓN DE FOLLOW-UPS"
+  - Cuando usuario menciona proyecto/tema pasado, agente busca correos automáticamente
+  - Muestra lista con remitente + asunto + fecha
+  - Solo activa con intención clara (no con saludos o preguntas generales)
 
 ## [2026-03-18]
 
