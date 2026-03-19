@@ -146,6 +146,36 @@ gog calendar events primary --from 2026-03-12 --to 2026-03-13
 gog calendar events primary --from 2026-03-12 --to 2026-03-19
 ```
 
+### Verificación de Conflictos (ANTES de crear eventos)
+
+IMPORTANTE: Antes de crear un evento, SIEMPRE verifica disponibilidad:
+
+1. Verificar si hay eventos en la hora solicitada:
+   ```bash
+   gog calendar events <calendarId> --from 2026-03-19T15:00:00+01:00 --to 2026-03-19T16:00:00+01:00 --json
+   ```
+
+2. Si hay eventos (conflicto):
+   - Listar eventos del día completo:
+     ```bash
+     gog calendar events <calendarId> --from 2026-03-19 --to 2026-03-19 --json
+     ```
+   - Parsear JSON para calcular horas libres (09:00-20:00, slots de 1h)
+   - Informar al usuario del conflicto
+   - Proponer horas disponibles
+   - Ofrecer actualizar evento existente
+
+3. Si no hay conflicto: crear directamente
+
+### Actualización de Eventos
+
+Para actualizar un evento existente (reutilizar en vez de duplicar):
+```bash
+gog calendar update <calendarId> <eventId> --summary "Nuevo título" --from <iso> --to <iso> --event-color <id>
+```
+
+Para obtener el eventId, busca en la respuesta JSON del comando listar eventos.
+
 ### Año actual
 
 **IMPORTANTE**: El año actual es 2026. NO uses 2025 ni otros años.

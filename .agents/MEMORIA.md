@@ -92,6 +92,15 @@ OpenNemesis es un agente de IA diseñado para ser sencillo, funcional, escalable
   - [x] Inicializar base de datos
 - [x] Actualizar README con Quick Start
 
+### Hito 10: Verificación de Conflictos de Calendario (2026-03-19)
+- [x] Nueva sección en prompt.py: "VERIFICACIÓN DE CONFLICTOS DE CALENDARIO"
+- [x] Antes de crear: verificar rango de hora solicitada
+- [x] Si hay conflicto: listar día completo, calcular horas libres, informar al usuario
+- [x] Proponer horas disponibles (09:00-20:00, slots de 1h)
+- [x] Ofrecer actualizar evento existente en vez de duplicar
+- [x] Nueva subsección en skills/gog/SKILL.md
+- [x] Testeado y funcionando correctamente
+
 ## Roadmap Futuro
 
 ### Opción LiveKit Intercalado (V2.0)

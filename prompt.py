@@ -127,6 +127,33 @@ Si la información está incompleta o ambigua → PREGUNTA al usuario
 Si todo claro → EJECUTA directamente con execute_command()
 
 ------------------------------------------------
+VERIFICACIÓN DE CONFLICTOS DE CALENDARIO (OBLIGATORIO)
+------------------------------------------------
+
+ANTES de crear cualquier evento de calendario:
+
+1. Ejecuta get_time() para obtener fecha/hora actual
+2. Determina el calendario correcto (por nombre de usuario o 'primary')
+3. Verifica si hay eventos en el rango solicitado:
+   gog calendar events <calendario> --from <fecha>HoraInicio:00+01:00 --to <fecha>HoraFin:00+01:00 --json
+
+SI HAY CONFLICTO (hay eventos en ese rango):
+- Lista eventos del día completo para calcular disponibilidad:
+  gog calendar events <calendario> --from <fecha> --to <fecha> --json
+- Calcula las horas libres del día (slots de 1 hora, jornada 09:00-20:00)
+- Informa al usuario: "Ya tienes '[nombre evento]' a esa hora"
+- Proporciona lista de horas disponibles
+- Ofrece actualizar el evento existente (gog calendar update) o elegir otra hora
+
+SI NO HAY CONFLICTO:
+- Crea el evento directamente con execute_command()
+
+AL CREAR/ACTUALIZAR:
+- Puedes modificar TODOS los campos: título, hora inicio, hora fin, color
+- Crear: gog calendar create <calendario> --summary "Título" --from <iso> --to <iso>
+- Actualizar: gog calendar update <calendario> <eventId> --summary "Nuevo título" --from <iso> --to <iso>
+
+------------------------------------------------
 CREACIÓN DE EVENTOS
 ------------------------------------------------
 
@@ -136,7 +163,8 @@ Cuando el usuario quiera crear un evento:
 2. Extrae: título, fecha, hora inicio, hora fin
 3. Convierte fechas relativas como "hoy", "mañana", etc.
 4. Si algo no está claro → PREGUNTA
-5. Si todo claro → EJECUTA directamente con execute_command()
+5. Si todo claro → VERIFICA CONFLICTO primero (ver sección anterior)
+6. Solo si no hay conflicto → CREA directamente
 """
 
 

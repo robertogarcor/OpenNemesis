@@ -2,6 +2,16 @@
 
 Todos los cambios notables de este proyecto serán documentados en este archivo.
 
+## [2026-03-19]
+
+- ✨ feat: verificación de conflictos de calendario
+  - Nueva sección en prompt.py: "VERIFICACIÓN DE CONFLICTOS DE CALENDARIO"
+  - Antes de crear evento: verificar si hay conflicto con gog calendar events
+  - Si hay conflicto: proponer horas libres del día + ofrecer actualizar existente
+  - Si no hay conflicto: crear directamente
+  - Nueva subsección en skills/gog/SKILL.md para verificación y actualización
+  - El agente ahora evita duplicar eventos en el mismo horario
+
 ## [2026-03-18]
 
 - ✨ feat: historial por usuario de Telegram
