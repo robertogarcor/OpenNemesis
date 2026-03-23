@@ -65,7 +65,7 @@ def load_environment():
     else:
         logger.warning("⚠ No se encontró ningún archivo de configuración (.env o .env.local)")
     
-    required_vars = ["TELEGRAM_BOT_TOKEN", "API_KEY"]
+    required_vars = ["TELEGRAM_BOT_TOKEN", "GEMINI_API_KEY"]
     missing = [v for v in required_vars if not os.getenv(v)]
     
     if missing:
@@ -108,22 +108,22 @@ def validate_telegram_connection():
 
 
 def validate_gemini_connection():
-    """Valida la conexión con el proveedor de IA"""
-    logger.info("🔌 Validando conexión con el proveedor de IA...")
+    """Valida la conexión con Google Gemini"""
+    logger.info("🔌 Validando conexión con Google Gemini...")
     
     try:
-        api_key = os.getenv("API_KEY")
-        model = os.getenv("MODEL_LLM", "gemini-3.1-flash-lite-preview")
+        api_key = os.getenv("GEMINI_API_KEY")
+        model = os.getenv("GEMINI_MODEL", "gemini-3.1-flash-lite-preview")
         
         if not api_key:
-            logger.error("✗ API Key no configurada")
+            logger.error("✗ API Key de Gemini no configurada")
             return False
         
         # Configurar cliente
         client = genai.Client(api_key=api_key)
         
         # Test de conexión con modelo
-        logger.info(f"✓ Conexión con el proveedor de IA establecida")
+        logger.info(f"✓ Conexión con Gemini establecida")
         logger.info(f"  Modelo: {model}")
         
         return True
@@ -132,7 +132,7 @@ def validate_gemini_connection():
         logger.error("✗ google-genai no instalado")
         return False
     except Exception as e:
-        logger.error(f"✗ Error conectando al proveedor de IA: {e}")
+        logger.error(f"✗ Error conectando a Gemini: {e}")
         return False
 
 
@@ -214,7 +214,7 @@ def main(mode: str = "validate"):
     logger.info("RESUMEN DE VALIDACIÓN")
     logger.info("=" * 60)
     logger.info(f"Telegram Bot:    {'✓ CONECTADO' if telegram_ok else '✗ FALLO'}")
-    logger.info(f"Proveedor de IA: {'✓ CONECTADO' if gemini_ok else '✗ FALLO'}")
+    logger.info(f"Google Gemini:   {'✓ CONECTADO' if gemini_ok else '✗ FALLO'}")
     logger.info("=" * 60)
     
     if not (telegram_ok and gemini_ok):
@@ -229,8 +229,8 @@ def main(mode: str = "validate"):
     logger.info("🚀 Iniciando OpenNemesis...")
     
     gemini_client = GeminiClient(
-        api_key=os.getenv("API_KEY", ""),
-        model=os.getenv("MODEL_LLM", "gemini-3.1-flash-lite-preview")
+        api_key=os.getenv("GEMINI_API_KEY", ""),
+        model=os.getenv("GEMINI_MODEL", "gemini-3.1-flash-lite-preview")
     )
     
     telegram_bot = TelegramBot(

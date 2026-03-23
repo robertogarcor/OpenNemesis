@@ -5,7 +5,7 @@ Agente de IA modular, escalable y seguro inspirado en OpenClaw.
 ## Características
 
 - **Comunicación**: Telegram Bot (texto y voz)
-- **IA**: Modelos de lenguaje (LLM) con function calling recursivo
+- **IA**: Google Gemini con function calling recursivo
 - **Tools**:
   - Básicas: get_weather, get_time, search_web
   - Genérica: execute_command (ejecuta cualquier comando CLI)
@@ -20,7 +20,7 @@ Agente de IA modular, escalable y seguro inspirado en OpenClaw.
 - Python 3.10+
 - Entorno virtual `.venv/`
 - Telegram Bot Token
-- API Key y modelo de LLM (Gemini, OpenAI, Qwen, etc.)
+- Google Gemini API Key
 - GOG CLI (descargar desde https://github.com/steipete/gogcli/releases, requiere autenticación OAuth)
 
 ## Quick Start
@@ -30,7 +30,7 @@ Agente de IA modular, escalable y seguro inspirado en OpenClaw.
 cp .env.example .env
 
 # Editar .env con tus credenciales
-# Requiere: TELEGRAM_BOT_TOKEN, API_KEY
+# Requiere: TELEGRAM_BOT_TOKEN, GEMINI_API_KEY
 
 # Ejecutar script de setup (crea venv, instala deps, configura GOG)
 ./scripts/setup.sh
@@ -68,17 +68,16 @@ Copia `.env.example` a `.env` y configura las siguientes variables:
 | `MAX_HISTORY_MESSAGES` | Mensajes a recordar (por defecto 50) | No |
 | `PERSISTENCE_ENABLED` | Activar historial (true/false) | No |
 
-### LLM (Inteligencia Artificial)
+### Google Gemini
 | Variable | Descripción | Por defecto | Obligatorio |
 |----------|-------------|-------------|-------------|
-| `API_KEY` | API key del proveedor de IA | - | Sí |
-| `MODEL_LLM` | Modelo a usar | gemini-3.1-flash-lite-preview | No |
+| `GEMINI_API_KEY` | API key de Google Gemini | - | Sí |
+| `GEMINI_MODEL` | Modelo de Gemini | gemini-3.1-flash-lite-preview | No |
 
-**Modelos compatibles:**
-- Gemini: `gemini-3.1-flash-lite-preview`, `gemini-2.0-flash`, etc.
-- OpenAI: `gpt-4o`, `gpt-4o-mini`, etc.
-- Qwen: `qwen-turbo`, `qwen-plus`, etc.
-- Otros proveedores compatibles con la API de Google Genai
+**Modelos disponibles:**
+- `gemini-3.1-flash-lite-preview` (recomendado, 500 RPM)
+- `gemini-2.0-flash`
+- `gemini-2.0-flash-exp`
 
 ### GOG CLI
 | Variable | Descripción | Por defecto | Obligatorio |

@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-OpenNemesis is a modular AI Telegram bot powered by LLM (Large Language Model). It processes text and voice messages, uses tools (weather, time, web search, command execution), and supports skills for extended functionality.
+OpenNemesis is a modular AI Telegram bot powered by Google Gemini. It processes text and voice messages, uses tools (weather, time, web search, command execution), and supports skills for extended functionality.
 
 ### Core Tools
 
@@ -27,7 +27,7 @@ Save the binary to `bin/gogcli/gog` and make it executable.
 
 - Python 3.10+
 - Telegram Bot Token
-- LLM API Key (Gemini, OpenAI, Qwen, etc.)
+- Google Gemini API Key
 - GOG CLI (Google Workspace CLI) for Gmail/Calendar/Drive operations
 - Default model: `gemini-3.1-flash-lite-preview`
 
