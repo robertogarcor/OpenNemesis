@@ -39,3 +39,6 @@ build/
 
 # Binaries
 bin/
+
+# Credentials (OAuth, API keys, etc.)
+credentials/

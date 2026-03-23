@@ -109,7 +109,25 @@ GOG CLI se usa para Gmail, Calendar, Drive y Contacts.
 Si es la primera vez que ejecutas GOG en esta máquina, necesitas autenticar:
 
 ```bash
+./bin/gogcli/gog auth credentials /path/to/client_secret.json
 ./bin/gogcli/gog auth add tu@email.com --services gmail,calendar,drive,contacts
+```
+
+### Obtener credenciales de Google Cloud
+
+GOG requiere un archivo `client_secret.json` de Google Cloud para OAuth:
+
+1. Ve a [Google Cloud Console](https://console.cloud.google.com/)
+2. Crea un nuevo proyecto (o usa uno existente)
+3. Ve a "APIs y servicios" → "Credenciales"
+4. Crea "Credenciales de OAuth" → "ID de cliente de OAuth"
+5. Tipo de aplicación: "Aplicación de escritorio"
+6. Descarga el archivo JSON
+7. Guarda el archivo en `credentials/client_secret.json` (el directorio está en .gitignore)
+
+El archivo se ve así:
+```json
+{"installed":{"client_id":"...","client_secret":"...","..."}}
 ```
 
 Se abrirá el navegador para autorizar. Los tokens se guardan en `~/.config/gog/` (no en el proyecto).
@@ -124,6 +142,7 @@ Los tokens OAuth no se incluyen en el proyecto. Al instalar en otra máquina, de
 OpenNemesis/
 ├── .agents/          # Documentación del desarrollador
 ├── bin/              # GOG CLI (descargar de releases)
+├── credentials/      # Credenciales OAuth (NO subir a git)
 ├── scripts/          # Scripts de utilidad
 ├── skills/          # Skills del agente (carpetas con SKILL.md)
 │   └── gog/         # Google Workspace
