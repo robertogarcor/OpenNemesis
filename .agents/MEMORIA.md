@@ -3,7 +3,7 @@
 Este documento sirve como referencia técnica y memoria de la evolución del proyecto OpenNemesis para Antigravity y otros asistentes de IA.
 
 ## Descripción
-OpenNemesis es un agente de IA diseñado para ser sencillo, funcional, escalable y seguro. Está inspirado en la idea de OpenClaw y su objetivo principal es asistir al usuario inicialmente a través de Telegram, para posteriormente escalar a plataformas web, móviles u otras interfaces (ej. LiveKit).
+OpenNemesis es un agente de IA diseñado para ser sencillo, funcional, escalable y seguro. Está inspirado en la idea de OpenClaw y su objetivo principal es asistir al usuario a través de Telegram.
 
 ## Historial de Desarrollo
 
@@ -108,32 +108,6 @@ OpenNemesis es un agente de IA diseñado para ser sencillo, funcional, escalable
 - [x] Muestra lista con remitente + asunto + fecha
 - [x] No activa con saludos o preguntas generales
 
-## Roadmap Futuro
-
-### Opción LiveKit Intercalado (V2.0)
-Arquitectura para voz ilimitada en tiempo real:
-
-```
-Telegram (audio) → Servidor Python → LiveKit → Gemini Live API
-                                              ↓
-Telegram (audio) ← Servidor Python ← LiveKit ← Respuesta
-```
-
-**Características:**
-- Voz en tiempo real (no mensajes estáticos)
-- Conversación voz-a-voz fluida
-- Ilimitado (si tienes API de LiveKit + Gemini Live)
-- Múltiples usuarios simultáneos
-
-**Requisitos:**
-- Servidor corriendo 24/7
-- LiveKit desplegado (self-hosted o cloud)
-- Webhook de Telegram para voz
-
-**Estado:** Pendiente de implementación
-
----
-
 ## Tareas Pendientes
 
 ### Prioridad Alta
@@ -149,6 +123,3 @@ Telegram (audio) ← Servidor Python ← LiveKit ← Respuesta
   - Requiere tabla user_state en BD
   - Condicional según PERSISTENCE_ENABLED
   - Pendiente de revisar
-
-### Prioridad Baja
-- [ ] Implementar LiveKit (V2.0) - Voz en tiempo real

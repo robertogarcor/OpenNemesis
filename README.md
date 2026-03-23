@@ -5,7 +5,7 @@ Agente de IA modular, escalable y seguro inspirado en OpenClaw.
 ## Características
 
 - **Comunicación**: Telegram Bot (texto y voz)
-- **IA**: Google Gemini (gemini-3.1-flash-lite-preview - 500 RPM) con function calling recursivo
+- **IA**: Modelos de lenguaje (LLM) con function calling recursivo
 - **Tools**:
   - Básicas: get_weather, get_time, search_web
   - Genérica: execute_command (ejecuta cualquier comando CLI)
@@ -20,13 +20,19 @@ Agente de IA modular, escalable y seguro inspirado en OpenClaw.
 - Python 3.10+
 - Entorno virtual `.venv/`
 - Telegram Bot Token
-- Google Gemini API Key
-- GOG CLI (incluido en `bin/gogcli/gog`, requiere autenticación OAuth)
+- API Key y modelo de LLM (Gemini, OpenAI, Qwen, etc.)
+- GOG CLI (descargar desde https://github.com/steipete/gogcli/releases, requiere autenticación OAuth)
 
 ## Quick Start
 
 ```bash
-# Ejecutar script de setup (crea venv, instala deps, copia GOG, configura .env)
+# Copiar plantilla de configuración
+cp .env.example .env
+
+# Editar .env con tus credenciales
+# Requiere: TELEGRAM_BOT_TOKEN, API_KEY
+
+# Ejecutar script de setup (crea venv, instala deps, configura GOG)
 ./scripts/setup.sh
 
 # Iniciar el bot
@@ -43,12 +49,42 @@ source .venv/bin/activate
 pip install -r requirements.txt
 
 # Configurar variables de entorno
-cp .env.local .env
+cp .env.example .env
 # Editar .env con tus credenciales
 
 # Ejecutar
 python main.py
 ```
+
+## Configuración
+
+Copia `.env.example` a `.env` y configura las siguientes variables:
+
+### Telegram Bot
+| Variable | Descripción | Obligatorio |
+|----------|-------------|-------------|
+| `TELEGRAM_BOT_TOKEN` | Token del bot de Telegram | Sí |
+| `TELEGRAM_ALLOWED_USER_ID` | ID de usuario autorizado (separar por coma para múltiples) | No |
+| `MAX_HISTORY_MESSAGES` | Mensajes a recordar (por defecto 50) | No |
+| `PERSISTENCE_ENABLED` | Activar historial (true/false) | No |
+
+### LLM (Inteligencia Artificial)
+| Variable | Descripción | Por defecto | Obligatorio |
+|----------|-------------|-------------|-------------|
+| `API_KEY` | API key del proveedor de IA | - | Sí |
+| `MODEL_LLM` | Modelo a usar | gemini-3.1-flash-lite-preview | No |
+
+**Modelos compatibles:**
+- Gemini: `gemini-3.1-flash-lite-preview`, `gemini-2.0-flash`, etc.
+- OpenAI: `gpt-4o`, `gpt-4o-mini`, etc.
+- Qwen: `qwen-turbo`, `qwen-plus`, etc.
+- Otros proveedores compatibles con la API de Google Genai
+
+### GOG CLI
+| Variable | Descripción | Por defecto | Obligatorio |
+|----------|-------------|-------------|-------------|
+| `GOG_ACCOUNT` | Cuenta Google para autenticación | - | No |
+| `GOGCLI_PATH` | Ruta al binario de GOG | bin/gogcli | No |
 
 ## Base de datos
 
@@ -58,9 +94,18 @@ No es necesario crear la base de datos manualmente.
 
 ## GOG CLI (Google Workspace)
 
-GOG CLI está incluido en `bin/gogcli/gog` y se usa para Gmail, Calendar, Drive y Contacts.
+GOG CLI se usa para Gmail, Calendar, Drive y Contacts.
 
-### Primera instalación
+**Repositorio**: https://github.com/steipete/gogcli
+**Descargar**: https://github.com/steipete/gogcli/releases
+
+### Instalación
+
+1. Descarga el binario de la página de releases
+2. Guárdalo en `bin/gogcli/gog` (crea la carpeta si no existe)
+3. Hazlo ejecutable: `chmod +x bin/gogcli/gog`
+
+### Primera autenticación
 
 Si es la primera vez que ejecutas GOG en esta máquina, necesitas autenticar:
 
@@ -79,7 +124,7 @@ Los tokens OAuth no se incluyen en el proyecto. Al instalar en otra máquina, de
 ```
 OpenNemesis/
 ├── .agents/          # Documentación del desarrollador
-├── bin/              # Binarios (gog)
+├── bin/              # GOG CLI (descargar de releases)
 ├── scripts/          # Scripts de utilidad
 ├── skills/          # Skills del agente (carpetas con SKILL.md)
 │   └── gog/         # Google Workspace
@@ -87,7 +132,7 @@ OpenNemesis/
 ├── data/            # Datos (base de datos SQLite)
 ├── prompt.py        # Prompts del sistema
 ├── main.py          # Punto de entrada
-├── .env.local       # Plantilla de configuración
+├── .env.example     # Plantilla de configuración
 └── requirements.txt
 ```
 

@@ -1,6 +1,6 @@
 """
-OpenNemesis - Gemini Client
-Cliente para Google Gemini con soporte multimodal, tools y skills
+OpenNemesis - LLM Client
+Cliente genérico para modelos de IA con soporte multimodal, tools y skills
 """
 
 import logging
@@ -13,7 +13,7 @@ from google.genai import types
 from prompt import get_system_prompt, reload_skills_context
 from tools.tools import get_weather, get_time, search_web, execute_command
 
-logger = logging.getLogger("OpenNemesis.Gemini")
+logger = logging.getLogger("OpenNemesis.LLM")
 
 SKILLS_CONTEXT = reload_skills_context()
 

@@ -32,16 +32,19 @@ if [ -f "bin/gogcli/gog" ]; then
     echo -e "${GREEN}✓ GOG encontrado en bin/gogcli/gog${NC}"
 else
     echo -e "${YELLOW}⚠ GOG no encontrado en bin/gogcli/gog${NC}"
+    echo -e "${YELLOW}  Descarga el binario desde: https://github.com/steipete/gogcli/releases${NC}"
+    echo -e "${YELLOW}  Guárdalo en: bin/gogcli/gog${NC}"
 fi
 
-# 4. Copy .env.local to .env if not exists
+# 4. Copy .env.example to .env if not exists
 if [ ! -f ".env" ]; then
-    if [ -f ".env.local" ]; then
-        echo -e "${YELLOW}→ Copiando .env.local a .env...${NC}"
-        cp .env.local .env
-        echo -e "${GREEN}✓ .env creado${NC}"
+    if [ -f ".env.example" ]; then
+        echo -e "${YELLOW}→ Copiando .env.example a .env...${NC}"
+        cp .env.example .env
+        echo -e "${GREEN}✓ .env creado desde plantilla${NC}"
+        echo -e "${YELLOW}⚠ IMPORTANTE: Edita .env con tus credenciales${NC}"
     else
-        echo -e "${YELLOW}⚠ .env.local no encontrado. Crea uno manualmente.${NC}"
+        echo -e "${YELLOW}⚠ .env.example no encontrado. Créalo manualmente.${NC}"
     fi
 else
     echo -e "${GREEN}✓ .env ya existe${NC}"

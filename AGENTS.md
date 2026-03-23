@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-OpenNemesis is a modular AI Telegram bot powered by Google Gemini. It processes text and voice messages, uses tools (weather, time, web search, command execution), and supports skills for extended functionality.
+OpenNemesis is a modular AI Telegram bot powered by LLM (Large Language Model). It processes text and voice messages, uses tools (weather, time, web search, command execution), and supports skills for extended functionality.
 
 ### Core Tools
 
@@ -13,7 +13,11 @@ OpenNemesis is a modular AI Telegram bot powered by Google Gemini. It processes 
 
 ### GOG CLI
 
-The project uses GOG CLI (`/opt/gogcli`) for Google Workspace operations (Gmail, Calendar, Drive, Contacts). Commands are executed via the `execute_command` tool.
+The project uses GOG CLI for Google Workspace operations (Gmail, Calendar, Drive, Contacts). Commands are executed via the `execute_command` tool.
+
+**Download**: https://github.com/steipete/gogcli/releases
+
+Save the binary to `bin/gogcli/gog` and make it executable.
 
 ---
 
@@ -23,7 +27,7 @@ The project uses GOG CLI (`/opt/gogcli`) for Google Workspace operations (Gmail,
 
 - Python 3.10+
 - Telegram Bot Token
-- Google Gemini API Key
+- LLM API Key (Gemini, OpenAI, Qwen, etc.)
 - GOG CLI (Google Workspace CLI) for Gmail/Calendar/Drive operations
 - Default model: `gemini-3.1-flash-lite-preview`
 
@@ -52,7 +56,7 @@ The project uses Git for version control:
 
 ```bash
 # Copy template and configure
-cp .env.local .env
+cp .env.example .env
 # Edit .env with your credentials
 ```
 
