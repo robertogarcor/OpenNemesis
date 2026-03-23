@@ -319,6 +319,11 @@ Follow Conventional Commits with emojis:
 Update CHANGELOG.md after commits:
 
 ```bash
+# Linux/Mac
+chmod +x .agents/skills/changelog-generator/scripts/update_changelog.sh
+.agents/skills/changelog-generator/scripts/update_changelog.sh
+
+# Windows (PowerShell)
 powershell -ExecutionPolicy Bypass -File .agents/skills/changelog-generator/scripts/update_changelog.ps1
 ```
 

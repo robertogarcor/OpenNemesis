@@ -38,4 +38,18 @@ description: Breve descripción de lo que hace (en tercera persona).
 ```
 
 ## Herramientas de ayuda
-- Puedes usar el script `scripts/scaffold_skill.ps1` incluido en esta habilidad para generar la estructura básica.
+
+### Linux/Mac
+```bash
+# Hacer ejecutable
+chmod +x .agents/skills/skill-creator/scripts/scaffold_skill.sh
+
+# Ejecutar
+.agents/skills/skill-creator/scripts/scaffold_skill.sh nombre_skill
+```
+
+### Windows (PowerShell)
+```powershell
+# Ejecutar
+.agents/skills/skill-creator/scripts/scaffold_skill.ps1 -Name nombre_skill
+```

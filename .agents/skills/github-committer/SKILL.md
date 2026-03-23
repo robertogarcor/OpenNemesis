@@ -35,4 +35,24 @@ El formato obligatorio es:
 `✨ feat(ui): añadir botón de guardado rápido`
 
 ## Herramientas
-Usa el script `scripts/git-commit-helper.ps1` para generar mensajes válidos automáticamente.
+
+### Linux/Mac
+```bash
+# Hacer ejecutable
+chmod +x .agents/skills/github-committer/scripts/git-commit-helper.sh
+
+# Modo interactivo
+.agents/skills/github-committer/scripts/git-commit-helper.sh
+
+# Con argumentos: tipo ámbito mensaje
+.agents/skills/github-committer/scripts/git-commit-helper.sh feat ui "añadir botón"
+```
+
+### Windows (PowerShell)
+```powershell
+# Ejecutar
+.agents/skills/github-committer/scripts/git-commit-helper.ps1
+
+# Con argumentos
+.agents/skills/github-committer/scripts/git-commit-helper.ps1 -Type feat -Scope ui -Message "añadir botón"
+```

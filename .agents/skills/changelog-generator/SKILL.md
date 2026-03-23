@@ -13,14 +13,27 @@ Esta habilidad permite generar y mantener actualizado un archivo `CHANGELOG.md` 
 - Al preparar una nueva versión o entrega del proyecto.
 
 ## Cómo usarla
-1. **Actualizar el Changelog**: Ejecuta el script de PowerShell proporcionado.
-   ```powershell
-   powershell -ExecutionPolicy Bypass -File .agents/skills/changelog-generator/scripts/update_changelog.ps1
-   ```
-2. **Personalizar**: Puedes pasar un nombre de archivo diferente si lo deseas.
-   ```powershell
-   powershell -ExecutionPolicy Bypass -File .agents/skills/changelog-generator/scripts/update_changelog.ps1 -ChangelogFile "HISTORY.md"
-   ```
+
+### Linux/Mac
+```bash
+# Hacer ejecutable
+chmod +x .agents/skills/changelog-generator/scripts/update_changelog.sh
+
+# Ejecutar
+.agents/skills/changelog-generator/scripts/update_changelog.sh
+
+# Personalizar archivo de salida
+.agents/skills/changelog-generator/scripts/update_changelog.sh HISTORY.md
+```
+
+### Windows (PowerShell)
+```powershell
+# Ejecutar
+powershell -ExecutionPolicy Bypass -File .agents/skills/changelog-generator/scripts/update_changelog.ps1
+
+# Personalizar archivo de salida
+powershell -ExecutionPolicy Bypass -File .agents/skills/changelog-generator/scripts/update_changelog.ps1 -ChangelogFile "HISTORY.md"
+```
 
 ## Estructura del Changelog
 El archivo generado sigue un formato simple y legible:
