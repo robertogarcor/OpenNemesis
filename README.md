@@ -72,7 +72,7 @@ Copia `.env.example` a `.env` y configura las siguientes variables:
 | Variable | Descripción | Por defecto | Obligatorio |
 |----------|-------------|-------------|-------------|
 | `GEMINI_API_KEY` | API key de Google Gemini | - | Sí |
-| `GEMINI_MODEL` | Modelo de Gemini | gemini-3.1-flash-lite-preview | No |
+| `GEMINI_MODEL` | Modelo de Gemini | gemini-3.1-flash-lite-preview | Sí |
 
 **Modelos disponibles:**
 - `gemini-3.1-flash-lite-preview` (recomendado, 500 RPM)
@@ -82,7 +82,7 @@ Copia `.env.example` a `.env` y configura las siguientes variables:
 ### GOG CLI
 | Variable | Descripción | Por defecto | Obligatorio |
 |----------|-------------|-------------|-------------|
-| `GOG_ACCOUNT` | Cuenta Google para autenticación | - | No |
+| `GOG_ACCOUNT` | Cuenta Google para autenticación | - | Sí |
 | `GOGCLI_PATH` | Ruta al binario de GOG | bin/gogcli | No |
 
 ## Base de datos
