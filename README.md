@@ -68,6 +68,16 @@ Copia `.env.example` a `.env` y configura las siguientes variables:
 | `MAX_HISTORY_MESSAGES` | Mensajes a recordar (por defecto 50) | No |
 | `PERSISTENCE_ENABLED` | Activar historial (true/false) | No |
 
+#### Obtener un Bot de Telegram
+
+Para crear un bot de Telegram:
+
+1. Abre Telegram y busca `@BotFather`
+2. Envía el comando `/newbot`
+3. Sigue las instrucciones para nombrar tu bot (debe terminar en `bot`)
+4. Copia el **Token** proporcionado (ej: `123456:ABC-DEF1234ghIkl-...`)
+5. Añádelo a `.env` en la variable `TELEGRAM_BOT_TOKEN`
+
 ### Google Gemini
 | Variable | Descripción | Por defecto | Obligatorio |
 |----------|-------------|-------------|-------------|
@@ -162,7 +172,11 @@ OpenNemesis/
 
 ## Uso
 
-Inicia el bot en Telegram y envíale mensajes de texto o audio.
+1. Inicia el bot en el servidor: `python main.py run`
+2. Abre Telegram y busca tu bot por su nombre de usuario
+3. Envía `/start` para ver el mensaje de bienvenida, o escribe directamente
+
+El bot responde a mensajes de texto y audio. No es necesario usar comandos para empezar.
 
 ### Comandos disponibles
 
